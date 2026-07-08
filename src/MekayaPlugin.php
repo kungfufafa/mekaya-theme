@@ -10,6 +10,9 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
+use Apriansyahrs\MekayaTheme\Auth\MekayaLogin;
+use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
+use Apriansyahrs\MekayaTheme\Auth\MekayaResetPassword;
 use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
 
 /**
@@ -83,6 +86,8 @@ class MekayaPlugin implements Plugin
     {
         $panel
             ->viteTheme(mekaya_vite_input('css/theme.css'))
+            ->login(MekayaLogin::class)
+            ->passwordReset(MekayaRequestPasswordReset::class, MekayaResetPassword::class)
             ->sidebarLivewireComponent(MekayaSidebar::class)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth($this->sidebarWidth)

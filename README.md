@@ -18,7 +18,6 @@ Then attach the appshell to your panel provider with `->plugin(MekayaPlugin::mak
 ```php
 namespace App\Providers\Filament;
 
-use App\Filament\Auth\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
@@ -37,7 +36,6 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->plugin(MekayaPlugin::make())
-            ->login(Login::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([Dashboard::class])
