@@ -61,9 +61,9 @@
             </a>
 
             @if (filament()->auth()->check())
-                @if (filament()->hasDatabaseNotifications() && filament()->getDatabaseNotificationsPosition() === \Filament\Enums\DatabaseNotificationsPosition::Topbar)
-                    @livewire(filament()->getDatabaseNotificationsLivewireComponent(), [
-                        'lazy' => filament()->hasLazyLoadedDatabaseNotifications(),
+                @if (mekaya_database_notifications_enabled() && mekaya_database_notifications_position() === \Filament\Enums\DatabaseNotificationsPosition::Topbar && ($dbNotificationsComponent = mekaya_database_notifications_component()))
+                    @livewire($dbNotificationsComponent, [
+                        'lazy' => mekaya_database_notifications_is_lazy(),
                     ])
                 @endif
 

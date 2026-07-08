@@ -7,8 +7,8 @@
     use function Filament\Support\generate_icon_html;
 
     $navigation = filament()->getNavigation();
-    $hasDatabaseNotificationsInSidebar = filament()->hasDatabaseNotifications()
-        && filament()->getDatabaseNotificationsPosition() === DatabaseNotificationsPosition::Sidebar;
+    $hasDatabaseNotificationsInSidebar = mekaya_database_notifications_enabled()
+        && mekaya_database_notifications_position() === DatabaseNotificationsPosition::Sidebar;
     $hasUserMenuInSidebar = filament()->hasUserMenu()
         && filament()->getUserMenuPosition() === UserMenuPosition::Sidebar;
 @endphp
@@ -79,9 +79,9 @@
                     <!-- Footer -->
                     @if (filament()->auth()->check() && ($hasDatabaseNotificationsInSidebar || $hasUserMenuInSidebar))
                         <div class="mky-sidebar border-t border-gray-200 px-3 pt-3 pb-6 dark:border-white/20">
-                            @if ($hasDatabaseNotificationsInSidebar)
-                                @livewire(filament()->getDatabaseNotificationsLivewireComponent(), [
-                                    'lazy' => filament()->hasLazyLoadedDatabaseNotifications(),
+                            @if ($hasDatabaseNotificationsInSidebar && ($dbNotificationsComponent = mekaya_database_notifications_component()))
+                                @livewire($dbNotificationsComponent, [
+                                    'lazy' => mekaya_database_notifications_is_lazy(),
                                 ])
                             @endif
 
@@ -169,9 +169,9 @@
                         <!-- Footer -->
                         @if (filament()->auth()->check() && ($hasDatabaseNotificationsInSidebar || $hasUserMenuInSidebar))
                             <div class="mky-sidebar border-t border-gray-200 px-3 pt-3 pb-6 dark:border-white/20">
-                                @if ($hasDatabaseNotificationsInSidebar)
-                                    @livewire(filament()->getDatabaseNotificationsLivewireComponent(), [
-                                        'lazy' => filament()->hasLazyLoadedDatabaseNotifications(),
+                                @if ($hasDatabaseNotificationsInSidebar && ($dbNotificationsComponent = mekaya_database_notifications_component()))
+                                    @livewire($dbNotificationsComponent, [
+                                        'lazy' => mekaya_database_notifications_is_lazy(),
                                     ])
                                 @endif
 
