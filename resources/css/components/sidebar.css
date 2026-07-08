@@ -17,7 +17,7 @@
 
       .mky-sidebar-item-icon,
       .mky-sidebar-item-icon svg {
-        @apply size-5 shrink-0 fill-current;
+        @apply size-5 shrink-0 text-current;
       }
 
       .mky-sidebar-item-label {
@@ -50,9 +50,11 @@
 
           .mky-sidebar-item-icon,
           .mky-sidebar-item-icon svg {
-            @apply fill-gray-400 dark:fill-gray-500;
+            @apply text-gray-400 dark:text-gray-500;
           }
 
+          &:hover .mky-sidebar-item-icon,
+          &:hover .mky-sidebar-item-icon svg,
           &:hover .mky-sidebar-item-label {
             @apply text-gray-900 dark:text-white;
           }
@@ -82,7 +84,7 @@
 
             .mky-sidebar-item-icon,
             .mky-sidebar-item-icon svg {
-              @apply fill-gray-900 dark:fill-white;
+              @apply text-gray-900 dark:text-white;
             }
 
             .mky-sidebar-item-label {
