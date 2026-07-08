@@ -1,0 +1,76 @@
+/* Mekaya buttons — modern, thin 3D with a subtle top-to-bottom gradient.
+ *
+ * Layered over Filament's solid colored `.fi-btn` (which exposes the
+ * `--bg`, `--hover-bg`, `--dark-bg`, `--dark-hover-bg` custom properties),
+ * so the treatment adapts to whatever color the panel uses and works in
+ * light + dark mode. Only solid colored buttons get the gradient; outlined
+ * and neutral buttons keep Filament's default look.
+ *
+ * Lives in the `utilities` layer so it overrides Filament's
+ * `components`-layered button rules. */
+
+.fi-btn.fi-color:not(.fi-outlined):not(label) {
+    background-image: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bg), white 14%) 0%,
+        var(--bg) 100%
+    );
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 0 color-mix(in srgb, var(--bg), black 22%),
+        0 1px 1px -1px rgba(0, 0, 0, 0.18),
+        0 2px 5px -2px color-mix(in srgb, var(--bg), transparent 55%);
+}
+
+.fi-btn.fi-color:not(.fi-outlined):not(label):not(.fi-disabled):not([disabled]):hover {
+    background-image: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--hover-bg), white 14%) 0%,
+        var(--hover-bg) 100%
+    );
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 0 color-mix(in srgb, var(--hover-bg), black 22%),
+        0 1px 2px -1px rgba(0, 0, 0, 0.22),
+        0 3px 7px -2px color-mix(in srgb, var(--hover-bg), transparent 50%);
+}
+
+.fi-btn.fi-color:not(.fi-outlined):not(label):not(.fi-disabled):not([disabled]):active {
+    box-shadow:
+        inset 0 1px 1px 0 rgba(0, 0, 0, 0.20),
+        inset 0 -1px 0 0 color-mix(in srgb, var(--bg), black 18%);
+}
+
+/* Dark mode — gentler highlight (translucent white over dark surfaces),
+ * deeper bottom lip, stronger ambient shadow. The `.dark` prefix keeps
+ * specificity ahead of the light-mode hover rule above. */
+
+.dark .fi-btn.fi-color:not(.fi-outlined):not(label) {
+    background-image: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--dark-bg), white 12%) 0%,
+        var(--dark-bg) 100%
+    );
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
+        inset 0 -1px 0 0 color-mix(in srgb, var(--dark-bg), black 28%),
+        0 1px 2px -1px rgba(0, 0, 0, 0.40);
+}
+
+.dark .fi-btn.fi-color:not(.fi-outlined):not(label):not(.fi-disabled):not([disabled]):hover {
+    background-image: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--dark-hover-bg), white 12%) 0%,
+        var(--dark-hover-bg) 100%
+    );
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.10),
+        inset 0 -1px 0 0 color-mix(in srgb, var(--dark-hover-bg), black 28%),
+        0 1px 3px -1px rgba(0, 0, 0, 0.45);
+}
+
+.dark .fi-btn.fi-color:not(.fi-outlined):not(label):not(.fi-disabled):not([disabled]):active {
+    box-shadow:
+        inset 0 1px 1px 0 rgba(0, 0, 0, 0.45),
+        inset 0 -1px 0 0 color-mix(in srgb, var(--dark-bg), black 22%);
+}

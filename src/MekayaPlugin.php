@@ -30,7 +30,7 @@ class MekayaPlugin implements Plugin
     protected string $collapsedSidebarWidth = '4.5rem';
 
     protected array $colors = [
-        'primary' => Color::Purple,
+        'primary' => Color::Red,
     ];
 
     public static function make(): static
