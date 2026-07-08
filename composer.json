@@ -1,0 +1,27 @@
+{
+    "name": "apriansyahrs/mekaya-theme",
+    "description": "Mekaya — a custom Filament v4 admin panel appshell (sidebar, topbar, theme, Blade components).",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "filament/filament": "^4.0",
+        "livewire/livewire": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Apriansyahrs\\MekayaTheme\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Apriansyahrs\\MekayaTheme\\MekayaServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}

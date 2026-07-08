@@ -1,0 +1,86 @@
+@import '../../../../../vendor/filament/filament/resources/css/theme.css';
+
+@import './base.css';
+@import './components/index.css';
+
+/* Plugin's own Blade views (sidebar, components, chrome overrides). */
+@source '../views/**/*.blade.php';
+
+/* Host app + host views + Filament vendor views.
+   Paths are relative to packages/mekaya/admin-panel/resources/css — five
+   levels up to the project root. The same depth applies to a vendor install
+   (vendor/mekaya/admin-panel/resources/css), so these stay correct either way. */
+@source '../../../../../app/**/*.php';
+@source '../../../../../resources/views/**/*.blade.php';
+@source '../../../../../vendor/filament/**/*.blade.php';
+
+@source inline("max-w-{md,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl}");
+
+@layer components {
+    /* Global search results dropdown: Filament scopes its wide desktop layout to
+       .fi-topbar/.fi-sidebar ancestors, which this appshell drops in favour of
+       mekaya's .mky-header/.mky-si. Restore the neat full-width (capped) dropdown
+       on desktop so result detail columns don't collapse to a narrow strip. */
+    @media (min-width: 40rem) {
+        .mky-header .fi-global-search-results-ctn {
+            width: 100vw;
+            max-width: var(--container-sm);
+            inset-inline-start: 0;
+            inset-inline-end: 0;
+        }
+    }
+
+    .fi-simple-layout .fi-simple-main:has(.mky-card),
+    .fi-simple-layout .fi-simple-main.fi-width-full,
+    .fi-simple-layout .fi-simple-main.fi-width-Full {
+        @apply my-0 bg-transparent p-0 shadow-none ring-0 dark:bg-transparent dark:ring-0 sm:rounded-none sm:p-0;
+    }
+
+    .mky-user-menu-trigger {
+        @apply relative inline-flex items-center rounded-full text-sm leading-5 outline-none ring-primary-500 transition focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-800;
+    }
+
+    .mky-user-menu-trigger .fi-avatar {
+        @apply size-8 rounded-full object-cover;
+    }
+
+    .mky-user-menu .fi-dropdown-panel {
+        @apply w-64 overflow-hidden rounded-xl bg-white p-0 shadow-lg ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-white/10;
+    }
+
+    .mky-user-menu-account {
+        @apply flex items-center gap-3 border-b border-gray-200 p-3 dark:border-white/10;
+    }
+
+    .mky-user-menu-account .fi-avatar {
+        @apply size-8 rounded-full;
+    }
+
+    .mky-user-menu .fi-dropdown-list {
+        @apply p-1;
+    }
+
+    .mky-user-menu .fi-dropdown-list:not(:last-child) {
+        @apply border-b border-gray-200 dark:border-white/10;
+    }
+
+    .mky-user-menu .fi-dropdown-list.mky-user-menu-theme {
+        @apply bg-gray-50 p-1 dark:bg-gray-950;
+    }
+
+    .mky-user-menu .fi-dropdown-list-item {
+        @apply rounded-lg px-4 py-2 text-sm leading-5 text-gray-700 transition hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white;
+    }
+
+    .mky-user-menu .fi-dropdown-list-item-icon {
+        @apply size-5 text-gray-400;
+    }
+
+    .mky-user-menu .fi-theme-switcher {
+        @apply w-full;
+    }
+
+    .mky-user-menu .fi-theme-switcher-btn {
+        @apply flex-1;
+    }
+}
