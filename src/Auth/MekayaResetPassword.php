@@ -12,9 +12,12 @@ if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseResetPassword', false)) {
 
 class MekayaResetPassword extends BaseResetPassword
 {
-    protected string $view = 'mekaya::auth.reset-password';
-
     protected \BackedEnum|string|null $maxWidth = 'full';
+
+    public function getView(): string
+    {
+        return 'mekaya::auth.reset-password';
+    }
 
     public function hasLogo(): bool
     {

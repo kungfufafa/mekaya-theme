@@ -12,9 +12,12 @@ if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseLogin', false)) {
 
 class MekayaLogin extends BaseLogin
 {
-    protected string $view = 'mekaya::auth.login';
-
     protected \BackedEnum|string|null $maxWidth = 'full';
+
+    public function getView(): string
+    {
+        return 'mekaya::auth.login';
+    }
 
     public function hasLogo(): bool
     {

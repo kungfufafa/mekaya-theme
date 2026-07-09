@@ -12,9 +12,12 @@ if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseRequestPasswordReset', fal
 
 class MekayaRequestPasswordReset extends BaseRequestPasswordReset
 {
-    protected string $view = 'mekaya::auth.request-password-reset';
-
     protected \BackedEnum|string|null $maxWidth = 'full';
+
+    public function getView(): string
+    {
+        return 'mekaya::auth.request-password-reset';
+    }
 
     public function hasLogo(): bool
     {
