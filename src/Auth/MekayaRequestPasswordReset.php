@@ -2,7 +2,13 @@
 
 namespace Apriansyahrs\MekayaTheme\Auth;
 
-use Filament\Auth\Pages\PasswordReset\RequestPasswordReset as BaseRequestPasswordReset;
+if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseRequestPasswordReset', false)) {
+    if (class_exists(\Filament\Pages\Auth\PasswordReset\RequestPasswordReset::class)) {
+        class_alias(\Filament\Pages\Auth\PasswordReset\RequestPasswordReset::class, 'Apriansyahrs\MekayaTheme\Auth\BaseRequestPasswordReset');
+    } else {
+        class_alias(\Filament\Auth\Pages\PasswordReset\RequestPasswordReset::class, 'Apriansyahrs\MekayaTheme\Auth\BaseRequestPasswordReset');
+    }
+}
 
 class MekayaRequestPasswordReset extends BaseRequestPasswordReset
 {

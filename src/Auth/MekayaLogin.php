@@ -2,7 +2,13 @@
 
 namespace Apriansyahrs\MekayaTheme\Auth;
 
-use Filament\Auth\Pages\Login as BaseLogin;
+if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseLogin', false)) {
+    if (class_exists(\Filament\Pages\Auth\Login::class)) {
+        class_alias(\Filament\Pages\Auth\Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
+    } else {
+        class_alias(\Filament\Auth\Pages\Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
+    }
+}
 
 class MekayaLogin extends BaseLogin
 {
