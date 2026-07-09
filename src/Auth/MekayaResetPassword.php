@@ -12,7 +12,11 @@ if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseResetPassword', false)) {
 
 class MekayaResetPassword extends BaseResetPassword
 {
-    protected \BackedEnum|string|null $maxWidth = 'full';
+    public function mount(...$args): void
+    {
+        parent::mount(...$args);
+        $this->maxWidth = 'full';
+    }
 
     public function getView(): string
     {
