@@ -87,13 +87,18 @@ class MekayaPlugin implements Plugin
         $panel
             ->viteTheme(mekaya_vite_input('css/theme.css'))
             ->login(MekayaLogin::class)
-            ->passwordReset(MekayaRequestPasswordReset::class, MekayaResetPassword::class)
-            ->sidebarLivewireComponent(MekayaSidebar::class)
+            ->passwordReset(MekayaRequestPasswordReset::class, MekayaResetPassword::class);
+
+        if (method_exists($panel, 'sidebarLivewireComponent')) {
+            $panel->sidebarLivewireComponent(MekayaSidebar::class);
+        }
+
+        $panel
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth($this->sidebarWidth)
             ->collapsedSidebarWidth($this->collapsedSidebarWidth)
             ->profile(isSimple: false)
-            ->maxContentWidth(Width::Full)
+            ->maxContentWidth(enum_exists(\Filament\Support\Enums\Width::class) ? \Filament\Support\Enums\Width::Full : \Filament\Support\Enums\MaxWidth::Full)
             ->favicon(asset(mekaya()->faviconPath()))
             ->brandLogo(fn (): HtmlString => new HtmlString(Blade::render('<x-mekaya::brand class="size-8" />')))
             ->brandLogoHeight($this->brandLogoHeight)

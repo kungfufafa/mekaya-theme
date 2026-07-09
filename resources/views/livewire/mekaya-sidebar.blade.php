@@ -1,16 +1,15 @@
 @php
-    use Filament\Enums\DatabaseNotificationsPosition;
-    use Filament\Enums\UserMenuPosition;
-    use Filament\Support\Icons\Heroicon;
     use Illuminate\View\ComponentAttributeBag;
-
     use function Filament\Support\generate_icon_html;
 
     $navigation = filament()->getNavigation();
     $hasDatabaseNotificationsInSidebar = mekaya_database_notifications_enabled()
-        && mekaya_database_notifications_position() === DatabaseNotificationsPosition::Sidebar;
+        && enum_exists(\Filament\Enums\DatabaseNotificationsPosition::class)
+        && mekaya_database_notifications_position() === \Filament\Enums\DatabaseNotificationsPosition::Sidebar;
     $hasUserMenuInSidebar = filament()->hasUserMenu()
-        && filament()->getUserMenuPosition() === UserMenuPosition::Sidebar;
+        && enum_exists(\Filament\Enums\UserMenuPosition::class)
+        && method_exists(filament(), 'getUserMenuPosition')
+        && filament()->getUserMenuPosition() === \Filament\Enums\UserMenuPosition::Sidebar;
 @endphp
 
 <div class="h-full">

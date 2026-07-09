@@ -4,8 +4,6 @@
 
 @php
     use Filament\Actions\Action;
-    use Filament\Enums\UserMenuPosition;
-    use Filament\Support\Enums\Width;
     use Illuminate\Support\Arr;
 
     $user = filament()->auth()->user();
@@ -26,7 +24,9 @@
         $itemsBeforeThemeSwitcher = $itemsBeforeThemeSwitcher->prepend($itemsBeforeThemeSwitcher->pull('profile'), 'profile');
     }
 
-    $position ??= filament()->getUserMenuPosition();
+    $position ??= method_exists(filament(), 'getUserMenuPosition') ? filament()->getUserMenuPosition() : 'sidebar';
+    $isTopbar = enum_exists(\Filament\Enums\UserMenuPosition::class) ? ($position === \Filament\Enums\UserMenuPosition::Topbar) : ($position === 'topbar');
+    $dropdownWidth = enum_exists(\Filament\Support\Enums\Width::class) ? \Filament\Support\Enums\Width::ThreeExtraSmall : \Filament\Support\Enums\MaxWidth::ThreeExtraSmall;
 
     $isSidebarCollapsibleOnDesktop = filament()->isSidebarCollapsibleOnDesktop();
     $userName = filament()->getUserName($user);
@@ -36,16 +36,16 @@
 {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_BEFORE) }}
 
 <x-filament::dropdown
-    :placement="($position === UserMenuPosition::Topbar) ? 'bottom-end' : 'top-end'"
-    :teleport="$position === UserMenuPosition::Topbar"
-    :width="Width::ThreeExtraSmall"
+    :placement="$isTopbar ? 'bottom-end' : 'top-end'"
+    :teleport="$isTopbar"
+    :width="$dropdownWidth"
     :attributes="
         \Filament\Support\prepare_inherited_attributes($attributes)
             ->class(['fi-user-menu mky-user-menu'])
     "
 >
     <x-slot name="trigger">
-        @if ($position === UserMenuPosition::Topbar)
+        @if ($isTopbar)
             <div class="group relative flex items-center rounded-xl transition duration-200 ease-in-out">
                 <button
                     aria-label="{{ __('filament-panels::layout.actions.open_user_menu.label') }}"

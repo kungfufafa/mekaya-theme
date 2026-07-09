@@ -1,7 +1,6 @@
 <?php
 
 use Apriansyahrs\MekayaTheme\Mekaya;
-use Filament\Enums\DatabaseNotificationsPosition;
 
 if (! function_exists('mekaya')) {
     /**
@@ -72,7 +71,7 @@ if (! function_exists('mekaya_database_notifications_position')) {
      * The current panel's database-notifications position, or null when the
      * installed Filament version doesn't expose it.
      */
-    function mekaya_database_notifications_position(): ?DatabaseNotificationsPosition
+    function mekaya_database_notifications_position(): mixed
     {
         $manager = filament();
 

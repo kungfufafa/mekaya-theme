@@ -43,7 +43,7 @@
         <div class="flex flex-1">
             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE) }}
 
-            @if (filament()->isGlobalSearchEnabled() && filament()->getGlobalSearchPosition() === \Filament\Enums\GlobalSearchPosition::Topbar)
+            @if (filament()->isGlobalSearchEnabled() && (!enum_exists(\Filament\Enums\GlobalSearchPosition::class) || !method_exists(filament(), 'getGlobalSearchPosition') || filament()->getGlobalSearchPosition() === \Filament\Enums\GlobalSearchPosition::Topbar))
                 @livewire(Filament\Livewire\GlobalSearch::class)
             @endif
 
@@ -61,13 +61,13 @@
             </a>
 
             @if (filament()->auth()->check())
-                @if (mekaya_database_notifications_enabled() && mekaya_database_notifications_position() === \Filament\Enums\DatabaseNotificationsPosition::Topbar && ($dbNotificationsComponent = mekaya_database_notifications_component()))
+                @if (mekaya_database_notifications_enabled() && (!enum_exists(\Filament\Enums\DatabaseNotificationsPosition::class) || mekaya_database_notifications_position() === null || mekaya_database_notifications_position() === \Filament\Enums\DatabaseNotificationsPosition::Topbar) && ($dbNotificationsComponent = mekaya_database_notifications_component()))
                     @livewire($dbNotificationsComponent, [
                         'lazy' => mekaya_database_notifications_is_lazy(),
                     ])
                 @endif
 
-                @if (filament()->hasUserMenu() && filament()->getUserMenuPosition() === \Filament\Enums\UserMenuPosition::Topbar)
+                @if (filament()->hasUserMenu() && (!enum_exists(\Filament\Enums\UserMenuPosition::class) || !method_exists(filament(), 'getUserMenuPosition') || filament()->getUserMenuPosition() === \Filament\Enums\UserMenuPosition::Topbar))
                     <x-filament-panels::user-menu />
                 @endif
             @endif
