@@ -36,14 +36,14 @@ Add this to your `composer.json`:
 
 ```json
 "repositories": [
-    { "type": "vcs", "url": "https://github.com/apriansyahrs/mekaya-theme.git" }
+  { "type": "vcs", "url": "https://github.com/kungfufafa/mekaya-theme.git" }
 ]
 ```
 
 Then require it:
 
 ```bash
-composer require apriansyahrs/mekaya-theme:@dev
+composer require kungfufafa/mekaya-theme:@dev
 ```
 
 Composer will also pull in the bundled UntitledUI Blade icons dependency
@@ -136,8 +136,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'vendor/apriansyahrs/mekaya-theme/resources/css/theme.css',
-                'vendor/apriansyahrs/mekaya-theme/resources/js/mekaya.js',
+                'vendor/kungfufafa/mekaya-theme/resources/css/theme.css',
+                'vendor/kungfufafa/mekaya-theme/resources/js/mekaya.js',
             ],
             refresh: true,
         }),
@@ -146,7 +146,7 @@ export default defineConfig({
 });
 ```
 
-> If you installed via a path repository (e.g. `packages/apriansyahrs/mekaya-theme`),
+> If you installed via a path repository (e.g. `packages/kungfufafa/mekaya-theme`),
 > use that path instead of `vendor/...`.
 
 Your `resources/css/app.css` should import Tailwind (the Filament installer normally adds

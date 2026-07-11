@@ -18,7 +18,7 @@ class Mekaya
 
     public function __construct()
     {
-        // src/Mekaya.php -> packages/apriansyahrs/mekaya-theme
+        // src/Mekaya.php -> packages/kungfufafa/mekaya-theme
         $this->basePath = dirname(__DIR__);
     }
 
