@@ -3,6 +3,7 @@
 namespace Apriansyahrs\MekayaTheme;
 
 use Apriansyahrs\MekayaTheme\Auth\MekayaLogin;
+use Apriansyahrs\MekayaTheme\Auth\MekayaRegister;
 use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
 use Apriansyahrs\MekayaTheme\Auth\MekayaResetPassword;
 use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
@@ -12,7 +13,6 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Foundation\Vite;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 
 /**
@@ -87,6 +87,7 @@ class MekayaPlugin implements Plugin
         $panel
             ->viteTheme(mekaya_vite_input('css/theme.css'))
             ->login(MekayaLogin::class)
+            ->registration(MekayaRegister::class)
             ->passwordReset(MekayaRequestPasswordReset::class, MekayaResetPassword::class);
 
         if (method_exists($panel, 'sidebarLivewireComponent')) {
@@ -99,9 +100,6 @@ class MekayaPlugin implements Plugin
             ->collapsedSidebarWidth($this->collapsedSidebarWidth)
             ->profile(isSimple: false)
             ->maxContentWidth(Width::Full)
-            ->favicon(asset(mekaya()->faviconPath()))
-            ->brandLogo(fn (): HtmlString => new HtmlString(Blade::render('<x-mekaya::brand class="size-8" />')))
-            ->brandLogoHeight($this->brandLogoHeight ?? (string) config('mekaya.admin.brand_logo_height', '2rem'))
             ->colors($this->colors)
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
@@ -115,6 +113,16 @@ class MekayaPlugin implements Plugin
                 PanelsRenderHook::SCRIPTS_BEFORE,
                 fn (): HtmlString => app(Vite::class)(mekaya_vite_input('js/mekaya.js')),
             );
+
+        $brandLogoHeight = $this->brandLogoHeight ?? config('mekaya.admin.brand_logo_height');
+
+        if (filled($brandLogoHeight)) {
+            $panel->brandLogoHeight((string) $brandLogoHeight);
+        }
+
+        if (filled($favicon = mekaya()->faviconPath())) {
+            $panel->favicon(asset($favicon));
+        }
     }
 
     public function boot(Panel $panel): void

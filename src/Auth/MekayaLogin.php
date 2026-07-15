@@ -2,17 +2,9 @@
 
 namespace Apriansyahrs\MekayaTheme\Auth;
 
-use Filament\Pages\Auth\Login;
+use Filament\Auth\Pages\Login;
 
-if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseLogin', false)) {
-    if (class_exists(Login::class)) {
-        class_alias(Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
-    } else {
-        class_alias(\Filament\Auth\Pages\Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
-    }
-}
-
-class MekayaLogin extends BaseLogin
+class MekayaLogin extends Login
 {
     public function mount(...$args): void
     {

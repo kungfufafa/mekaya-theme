@@ -309,7 +309,7 @@ export default (config = {}) => {
     // Livewire integration
     refresh() {
       if (window.Livewire) {
-        window.Livewire.dispatch('sidebar:refresh')
+        window.Livewire.dispatch('refresh-sidebar')
       }
     },
 

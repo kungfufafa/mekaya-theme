@@ -63,8 +63,8 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 class="mky-topbar-icon-control hidden items-center justify-center rounded-lg p-1 text-gray-500 ring-1 ring-gray-200 transition-colors hover:bg-gray-50 hover:text-gray-700 lg:inline-flex dark:text-gray-400 dark:ring-white/10 dark:hover:bg-gray-800 dark:hover:text-white"
-                aria-label="{{ mekaya_setting('name') }}"
-                title="{{ mekaya_setting('name') }}"
+                aria-label="{{ strip_tags((string) mekaya()->brandName()) }}"
+                title="{{ strip_tags((string) mekaya()->brandName()) }}"
             >
                 <x-filament::icon icon="heroicon-o-globe-alt" class="size-6" aria-hidden="true" />
             </a>

@@ -2,9 +2,9 @@
 
 namespace Apriansyahrs\MekayaTheme\Auth;
 
-use Filament\Auth\Pages\PasswordReset\RequestPasswordReset;
+use Filament\Auth\Pages\Register;
 
-class MekayaRequestPasswordReset extends RequestPasswordReset
+class MekayaRegister extends Register
 {
     public function mount(...$args): void
     {
@@ -14,7 +14,7 @@ class MekayaRequestPasswordReset extends RequestPasswordReset
 
     public function getView(): string
     {
-        return 'mekaya::auth.request-password-reset';
+        return 'mekaya::auth.register';
     }
 
     public function hasLogo(): bool

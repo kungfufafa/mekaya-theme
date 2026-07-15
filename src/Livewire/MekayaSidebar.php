@@ -2,10 +2,10 @@
 
 namespace Apriansyahrs\MekayaTheme\Livewire;
 
+use Filament\Livewire\Sidebar;
 use Illuminate\Contracts\View\View;
-use Livewire\Component;
 
-class MekayaSidebar extends Component
+class MekayaSidebar extends Sidebar
 {
     public function render(): View
     {

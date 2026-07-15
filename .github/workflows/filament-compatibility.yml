@@ -1,0 +1,107 @@
+name: Filament compatibility
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host-smoke:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Filament 4 + Livewire 3
+            filament: ^4.0
+            filament-major: 4
+            livewire: ^3.5
+            livewire-major: 3
+          - name: Filament 5 + Livewire 4
+            filament: ^5.0
+            filament-major: 5
+            livewire: ^4.0
+            livewire-major: 4
+
+    steps:
+      - name: Check out package
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: intl, mbstring, dom, xml, xmlwriter, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate package metadata
+        run: composer validate --strict --no-check-publish
+
+      - name: Create a real Laravel host application
+        shell: bash
+        run: |
+          composer create-project laravel/laravel:"^12.0" "$RUNNER_TEMP/mekaya-host" \
+            --prefer-dist \
+            --no-interaction
+
+          cd "$RUNNER_TEMP/mekaya-host"
+
+          composer config repositories.mekaya path "$GITHUB_WORKSPACE"
+
+          COMPOSER_MIRROR_PATH_REPOS=1 composer require \
+            "filament/filament:${{ matrix.filament }}" \
+            "livewire/livewire:${{ matrix.livewire }}" \
+            "kungfufafa/mekaya-theme:@dev" \
+            --with-all-dependencies \
+            --prefer-dist \
+            --no-progress \
+            --no-interaction
+
+          php artisan filament:install --panels --no-interaction
+
+          cp "$GITHUB_WORKSPACE/tests/Fixtures/Host/AdminPanelProvider.php" \
+            app/Providers/Filament/AdminPanelProvider.php
+          cp "$GITHUB_WORKSPACE/tests/Fixtures/Host/MekayaCompatibilityTest.php" \
+            tests/Feature/MekayaCompatibilityTest.php
+          cp "$GITHUB_WORKSPACE/tests/Fixtures/Host/User.php" app/Models/User.php
+          cp "$GITHUB_WORKSPACE/tests/Fixtures/Host/vite.config.js" vite.config.js
+
+          composer dump-autoload --no-interaction
+          php artisan vendor:publish --tag=mekaya-assets --force --no-interaction
+
+      - name: Build production assets
+        working-directory: ${{ runner.temp }}/mekaya-host
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Exercise package contracts and runtime
+        working-directory: ${{ runner.temp }}/mekaya-host
+        env:
+          EXPECTED_FILAMENT_MAJOR: ${{ matrix.filament-major }}
+          EXPECTED_LIVEWIRE_MAJOR: ${{ matrix.livewire-major }}
+        run: |
+          php artisan optimize:clear
+          php artisan view:cache
+          php artisan view:clear
+          php artisan test --compact --filter=MekayaCompatibilityTest
+
+      - name: Report resolved versions
+        if: always()
+        working-directory: ${{ runner.temp }}/mekaya-host
+        run: |
+          composer show filament/filament --no-ansi || true
+          composer show livewire/livewire --no-ansi || true

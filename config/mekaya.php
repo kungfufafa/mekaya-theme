@@ -7,16 +7,22 @@ return [
         'path' => 'admin',
 
         // Optional panel version metadata exposed through mekaya()->version().
-        'version' => 'v2',
+        'version' => 'v1',
 
-        // Optional brand image path (relative to /public). Null falls back to the bundled mekaya icon.
+        // Optional brand logo path from the host application's /public directory.
+        // A logo configured directly on the Filament panel takes precedence.
         'brand' => null,
 
-        // Brand logo height in the panel header.
-        'brand_logo_height' => '2rem',
+        // Optional compact brand icon path from the host application's /public directory.
+        // When neither a panel logo nor this icon exists, the application name is used.
+        'brand_icon' => null,
 
-        // Favicon path (relative to /public).
-        'favicon' => 'vendor/mekaya/mekaya-icon.svg',
+        // Optional logo height. Null preserves the value configured on the panel.
+        'brand_logo_height' => null,
+
+        // Optional favicon path from the host application's /public directory.
+        // Null preserves the favicon configured directly on the Filament panel.
+        'favicon' => null,
     ],
 
     'settings' => [

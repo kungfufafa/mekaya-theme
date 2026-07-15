@@ -1,6 +1,6 @@
 {
     "name": "kungfufafa/mekaya-theme",
-    "description": "Mekaya — a custom Filament v4 admin panel appshell (sidebar, topbar, theme, Blade components).",
+    "description": "Mekaya — a custom Filament v4/v5 admin panel appshell (sidebar, topbar, theme, Blade components).",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,8 +10,8 @@
     ],
     "require": {
         "php": "^8.2",
-        "filament/filament": "^4.0",
-        "livewire/livewire": "^3.0",
+        "filament/filament": "^4.0 || ^5.0",
+        "livewire/livewire": "^3.5 || ^4.0",
         "mckenziearts/blade-untitledui-icons": "^1.5"
     },
     "autoload": {
@@ -29,5 +29,6 @@
             ]
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

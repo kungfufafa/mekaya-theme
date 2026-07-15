@@ -47,7 +47,7 @@
         id="mekaya-desktop-sidebar"
         class="mky-si hidden h-full lg:flex lg:shrink-0"
         x-bind:class="{ 'mky-si-collapsed': $store.sidebar.isCollapsed }"
-        aria-label="{{ mekaya_setting('name') }}"
+        aria-label="{{ strip_tags((string) mekaya()->brandName()) }}"
     >
         <div class="mky-si-content h-full flex-1 overflow-hidden transition-[width] duration-200">
             <div class="from-primary-600 to-primary-100 dark:to-primary-600/10 h-1 bg-linear-to-br"></div>
@@ -56,7 +56,9 @@
                 <!-- Header / Branding -->
                 <div class="py-4 px-6 border-b border-dashed border-gray-200 dark:border-white/20">
                     <div class="relative flex items-center gap-3">
-                        <x-mekaya::brand class="size-6 shrink-0" aria-hidden="true" />
+                        @if (mekaya()->hasBrandVisual())
+                            <x-mekaya::brand class="size-6 shrink-0" aria-hidden="true" />
+                        @endif
 
                         <div
                             class="mky-sidebar-brand-copy min-w-0 truncate overflow-hidden transition-all duration-200"
@@ -70,7 +72,7 @@
                             x-transition:leave-end="opacity-0"
                         >
                             <h4 class="truncate text-sm font-medium text-gray-900 dark:text-white">
-                                {{ mekaya_setting('name') }}
+                                {{ mekaya()->brandName() }}
                             </h4>
                         </div>
                     </div>
@@ -85,7 +87,7 @@
                         ></div>
 
                         <div class="mky-si-scroll h-full overflow-y-auto">
-                            <nav class="mky-si-nav px-3 py-3" aria-label="{{ mekaya_setting('name') }}">
+                            <nav class="mky-si-nav px-3 py-3" aria-label="{{ strip_tags((string) mekaya()->brandName()) }}">
                                 @include('mekaya::livewire.partials.mekaya-sidebar-navigation', [
                                     'navigation' => $navigation,
                                     'navigationIdPrefix' => 'desktop',
@@ -137,7 +139,7 @@
             class="mky-sidebar-mobile-dialog pointer-events-none fixed inset-0 z-50 flex"
             role="dialog"
             aria-modal="true"
-            aria-label="{{ mekaya_setting('name') }}"
+            aria-label="{{ strip_tags((string) mekaya()->brandName()) }}"
             x-trap.noscroll="$store.sidebar.isOpen"
         >
             <div
@@ -162,15 +164,17 @@
                             <a
                                 href="{{ filament()->getUrl() }}"
                                 class="shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-                                aria-label="{{ mekaya_setting('name') }}"
+                                aria-label="{{ strip_tags((string) mekaya()->brandName()) }}"
                             >
-                                <x-mekaya::brand class="size-8" aria-hidden="true" />
+                                @if (mekaya()->hasBrandVisual())
+                                    <x-mekaya::brand class="size-8" aria-hidden="true" />
+                                @endif
                                 <span class="absolute inset-0"></span>
                             </a>
 
                             <div class="truncate">
                                 <h4 class="font-heading truncate text-sm/4 font-medium text-gray-900 dark:text-white">
-                                    {{ mekaya_setting('name') }}
+                                    {{ mekaya()->brandName() }}
                                 </h4>
                                 <span class="text-sm/4 text-gray-500 dark:text-gray-400">
                                     {{ mekaya_setting('email') }}
@@ -188,7 +192,7 @@
                             ></div>
 
                             <div class="mky-si-scroll h-full overflow-y-auto">
-                                <nav class="mky-si-nav px-3 py-3" aria-label="{{ mekaya_setting('name') }}">
+                            <nav class="mky-si-nav px-3 py-3" aria-label="{{ strip_tags((string) mekaya()->brandName()) }}">
                                     @include('mekaya::livewire.partials.mekaya-sidebar-navigation', [
                                         'navigation' => $navigation,
                                         'navigationIdPrefix' => 'mobile',

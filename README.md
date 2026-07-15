@@ -1,6 +1,6 @@
 # Mekaya Admin Panel
 
-A custom Filament v4 admin panel **appshell** — sidebar, topbar, theme, Blade components,
+A custom Filament v4/v5 admin panel **appshell** — sidebar, topbar, theme, Blade components,
 Alpine stores, and themed auth pages — packaged as a drop-in Filament plugin.
 
 Attach it to any panel with `->plugin(MekayaPlugin::make())` and you get the Mekaya
@@ -10,10 +10,23 @@ set — no host-app glue required.
 ## Requirements
 
 - PHP `^8.2`
-- Laravel `^11` / `^12` / `^13`
-- Filament `^4.0`
+- Laravel `^11.28` / `^12` / `^13` (within the selected Filament major's constraints)
+- Filament `^4.0` or `^5.0`
+- Livewire `^3.5` with Filament 4, or `^4.0` with Filament 5
 - Node.js + npm (for the Vite build)
 - Tailwind CSS v4 (set up by Filament's installer)
+
+Mekaya ships one source package for both Filament majors. Composer resolves the matching
+pair automatically:
+
+| Filament | Livewire |
+|----------|----------|
+| `4.x` | `3.5+` (`3.x`) |
+| `5.x` | `4.x` |
+
+Both combinations are exercised in separate real Laravel host applications by the
+repository's compatibility workflow, including Composer installation, Blade compilation,
+auth routes, the dashboard appshell, and the production Vite build.
 
 ## 1. Start from a fresh Laravel + Filament app
 
@@ -25,6 +38,10 @@ cd my-app
 composer require filament/filament:"^4.0"
 php artisan filament:install --panels
 ```
+
+The example above installs Filament 4. For a new Filament 5 application, use
+`composer require filament/filament:"^5.0"` instead. The remaining Mekaya setup is
+identical for both majors.
 
 The Filament installer creates your panel provider, the `/admin` path, and the
 Tailwind v4 + Vite scaffolding Mekaya builds on top of.
@@ -52,7 +69,7 @@ Composer will also pull in the bundled UntitledUI Blade icons dependency
 ## 3. Publish assets & (optionally) config
 
 ```bash
-php artisan vendor:publish --tag=mekaya-assets    # brand images -> public/vendor/mekaya
+php artisan vendor:publish --tag=mekaya-assets    # optional legacy Mekaya assets
 php artisan vendor:publish --tag=mekaya-config    # optional: config/mekaya.php
 ```
 
@@ -112,14 +129,14 @@ class AdminPanelProvider extends PanelProvider
 ```
 
 That single `->plugin(...)` call registers everything: theme, sidebar, topbar, branding,
-colors, fonts, scripts, **and the themed auth pages** (`/admin/login`,
+colors, fonts, scripts, and the themed auth pages (`/admin/login`, `/admin/register`,
 `/admin/password-reset/request`, `/admin/password-reset/reset`). You do **not** need to
-call `->login()` or `->passwordReset()` yourself.
+call `->login()`, `->registration()`, or `->passwordReset()` yourself.
 
-> **Ordering tip:** the plugin calls `->login()` / `->passwordReset()` inside its
-> `register()`, which runs at `->plugin(...)` time. Any `->login()` / `->passwordReset()`
-> call you place **after** `->plugin(...)` wins (last call wins), so you can override or
-> disable them — see [Auth pages](#auth-pages).
+> **Ordering tip:** the plugin configures login, registration, and password reset inside
+> `register()`, which runs at `->plugin(...)` time. Any matching Filament method placed
+> **after** `->plugin(...)` wins (last call wins), so the host application can override or
+> disable each auth feature — see [Auth pages](#auth-pages).
 
 ## 5. Wire up Vite
 
@@ -227,10 +244,16 @@ Publish with `php artisan vendor:publish --tag=mekaya-config`. Keys:
 |-----|---------|
 | `admin.path` | Panel path. Should match the panel's `->path()`. |
 | `admin.version` | Optional panel version metadata exposed through `mekaya()->version()`. |
-| `admin.brand` | Optional brand image path (relative to `/public`). `null` falls back to the bundled Mekaya icon. |
-| `admin.brand_logo_height` | Brand logo height in the panel header. |
-| `admin.favicon` | Favicon path relative to `/public`. Defaults to the published Mekaya icon. |
-| `settings.name` / `settings.email` | Panel name / from-email surfaced in the appshell. |
+| `admin.brand` | Optional logo path from the host application's `/public` directory. A panel `brandLogo()` takes precedence. |
+| `admin.brand_icon` | Optional compact icon path from the host application's `/public` directory. Used only when no panel/project logo exists. |
+| `admin.brand_logo_height` | Optional logo height. `null` preserves the value configured on the panel. |
+| `admin.favicon` | Optional favicon path from `/public`. `null` preserves the panel favicon. |
+| `settings.name` / `settings.email` | Legacy fallback name / from-email surfaced in the appshell. The panel brand name or `APP_NAME` is preferred. |
+
+Mekaya does not force its bundled SVG identity onto the application. Branding resolves in
+this order: the Filament panel's `brandLogo()`, `admin.brand`, `admin.brand_icon`, then the
+panel brand name / `APP_NAME`. The favicon configured by the host panel is also preserved
+unless `admin.favicon` is explicitly set.
 
 ### Auth pages
 
@@ -242,6 +265,9 @@ Filament methods **after** `->plugin(...)`:
 
 // Use your own login page:
 ->login(App\Filament\Auth\Login::class)
+
+// Disable public account registration:
+->registration(null)
 
 // Disable password reset entirely (no /admin/password-reset routes):
 ->passwordReset(null)

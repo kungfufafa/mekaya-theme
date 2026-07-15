@@ -3,6 +3,8 @@
 namespace Apriansyahrs\MekayaTheme;
 
 use Composer\InstalledVersions;
+use Filament\Facades\Filament;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 use OutOfBoundsException;
 
@@ -130,7 +132,7 @@ class Mekaya
 
     public function version(): string
     {
-        return (string) config('mekaya.admin.version', 'v2');
+        return (string) config('mekaya.admin.version', 'v1');
     }
 
     public function assetsPath(): string
@@ -138,14 +140,48 @@ class Mekaya
         return 'vendor/mekaya';
     }
 
-    public function faviconPath(): string
+    public function faviconPath(): ?string
     {
-        return (string) config('mekaya.admin.favicon', $this->assetsPath().'/mekaya-icon.svg');
+        $favicon = config('mekaya.admin.favicon');
+
+        // Older published configs used this package SVG as an implicit default.
+        // Treat it as unset so upgrading the theme stops overriding host branding.
+        if ($favicon === $this->assetsPath().'/mekaya-icon.svg') {
+            return null;
+        }
+
+        return filled($favicon) ? (string) $favicon : null;
     }
 
-    public function getBrandLogo(): ?HtmlString
+    public function getBrandLogo(): string|Htmlable|null
     {
-        return null;
+        $panelLogo = Filament::getCurrentPanel()?->getBrandLogo();
+
+        if (filled($panelLogo)) {
+            return $panelLogo;
+        }
+
+        $projectLogo = config('mekaya.admin.brand');
+
+        return filled($projectLogo) ? (string) $projectLogo : null;
+    }
+
+    public function brandIconPath(): ?string
+    {
+        $brandIcon = config('mekaya.admin.brand_icon');
+
+        return filled($brandIcon) ? (string) $brandIcon : null;
+    }
+
+    public function hasBrandVisual(): bool
+    {
+        return filled($this->getBrandLogo()) || filled($this->brandIconPath());
+    }
+
+    public function brandName(): string|Htmlable
+    {
+        return Filament::getCurrentPanel()?->getBrandName()
+            ?? (string) config('mekaya.settings.name', config('app.name', 'Laravel'));
     }
 
     /**
