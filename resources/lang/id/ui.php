@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'profile' => [
+        'actions' => [
+            'change_password' => 'Ubah kata sandi',
+        ],
+    ],
+
+    'password' => [
+        'title' => 'Ubah kata sandi',
+    ],
+
     'sidebar' => [
         'open' => 'Buka bilah samping',
         'toggle' => 'Buka atau tutup bilah samping',

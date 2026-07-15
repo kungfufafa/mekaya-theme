@@ -2,6 +2,8 @@
 
 namespace Apriansyahrs\MekayaTheme;
 
+use Apriansyahrs\MekayaTheme\Auth\MekayaEditProfile;
+use Apriansyahrs\MekayaTheme\Auth\MekayaChangePassword;
 use Apriansyahrs\MekayaTheme\Auth\MekayaLogin;
 use Apriansyahrs\MekayaTheme\Auth\MekayaRegister;
 use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
@@ -98,7 +100,10 @@ class MekayaPlugin implements Plugin
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth($this->sidebarWidth)
             ->collapsedSidebarWidth($this->collapsedSidebarWidth)
-            ->profile(isSimple: false)
+            ->profile(MekayaEditProfile::class, isSimple: false)
+            ->pages([
+                MekayaChangePassword::class,
+            ])
             ->maxContentWidth(Width::Full)
             ->colors($this->colors)
             ->renderHook(

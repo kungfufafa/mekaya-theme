@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Apriansyahrs\MekayaTheme\Auth\MekayaChangePassword;
+use Apriansyahrs\MekayaTheme\Auth\MekayaEditProfile;
 use Apriansyahrs\MekayaTheme\Auth\MekayaLogin;
 use Apriansyahrs\MekayaTheme\Auth\MekayaRegister;
 use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
@@ -17,6 +19,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -62,6 +65,8 @@ class MekayaCompatibilityTest extends TestCase
         $this->assertSame(MekayaRegister::class, $panel->getRegistrationRouteAction());
         $this->assertSame(MekayaRequestPasswordReset::class, $panel->getRequestPasswordResetRouteAction());
         $this->assertSame(MekayaResetPassword::class, $panel->getResetPasswordRouteAction());
+        $this->assertSame(MekayaEditProfile::class, $panel->getProfilePage());
+        $this->assertContains(MekayaChangePassword::class, $panel->getPages());
         $this->assertSame(Width::Full, $panel->getMaxContentWidth());
         $this->assertTrue(is_subclass_of(MekayaSidebar::class, Sidebar::class));
         $this->assertInstanceOf(MekayaSidebar::class, Livewire::new('mekaya-sidebar'));
@@ -233,6 +238,53 @@ class MekayaCompatibilityTest extends TestCase
             ->assertSee('mky-header', escape: false)
             ->assertSee('mekaya-desktop-sidebar', escape: false)
             ->assertSee('assets/theme-', escape: false);
+    }
+
+    public function test_profile_and_password_use_separate_authenticated_routes(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'profile@example.test',
+            'password' => 'current-password',
+        ]);
+
+        $this->actingAs($user);
+
+        Livewire::test(MekayaEditProfile::class)
+            ->set('data.name', 'Updated Profile')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertSame('Updated Profile', $user->fresh()->name);
+
+        $this->get('/admin/profile')
+            ->assertOk()
+            ->assertDontSee('New password')
+            ->assertSee('Change password');
+
+        $this->get('/admin/password')
+            ->assertOk()
+            ->assertSee('Current password')
+            ->assertDontSee('For security, please confirm your password to continue.')
+            ->assertSee('New password')
+            ->assertSee('Confirm new password');
+
+        Livewire::test(MekayaChangePassword::class)
+            ->set('data.password', 'new-secure-password')
+            ->set('data.passwordConfirmation', 'new-secure-password')
+            ->set('data.currentPassword', 'incorrect-password')
+            ->call('save')
+            ->assertHasErrors(['data.currentPassword']);
+
+        $this->assertTrue(Hash::check('current-password', $user->fresh()->password));
+
+        Livewire::test(MekayaChangePassword::class)
+            ->set('data.password', 'new-secure-password')
+            ->set('data.passwordConfirmation', 'new-secure-password')
+            ->set('data.currentPassword', 'current-password')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertTrue(Hash::check('new-secure-password', $user->fresh()->password));
     }
 
     private function installedMajor(string $package): int

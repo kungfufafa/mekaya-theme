@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'profile' => [
+        'actions' => [
+            'change_password' => 'Change password',
+        ],
+    ],
+
+    'password' => [
+        'title' => 'Change password',
+    ],
+
     'sidebar' => [
         'open' => 'Open sidebar',
         'toggle' => 'Toggle sidebar',
