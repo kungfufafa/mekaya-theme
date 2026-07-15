@@ -120,6 +120,48 @@ class MekayaCompatibilityTest extends TestCase
         }
     }
 
+    public function test_main_content_height_is_owned_by_the_mekaya_flex_layout(): void
+    {
+        $packagePath = InstalledVersions::getInstallPath('kungfufafa/mekaya-theme');
+        $theme = File::get($packagePath.'/resources/css/theme.css');
+
+        $this->assertStringContainsString('.fi-main.mky-main', $theme);
+        $this->assertMatchesRegularExpression(
+            '/\.fi-main\.mky-main\s*\{[^}]*height:\s*auto;[^}]*min-height:\s*0;/s',
+            $theme,
+        );
+    }
+
+    public function test_slide_over_height_respects_the_padded_modal_frame(): void
+    {
+        $packagePath = InstalledVersions::getInstallPath('kungfufafa/mekaya-theme');
+        $modals = File::get($packagePath.'/resources/css/components/modals.css');
+
+        $this->assertMatchesRegularExpression(
+            '/&\s*>\s*\.fi-modal-window-ctn\s*\{[^}]*padding:\s*var\(--modal-padding\);/s',
+            $modals,
+        );
+        $this->assertMatchesRegularExpression(
+            '/&\s*>\s*\.fi-modal-window\s*\{[^}]*height:\s*calc\(100dvh\s*-\s*\(2\s*\*\s*var\(--modal-padding\)\)\);/s',
+            $modals,
+        );
+    }
+
+    public function test_stats_use_the_same_mat_and_inset_surface_recipe_as_sections(): void
+    {
+        $packagePath = InstalledVersions::getInstallPath('kungfufafa/mekaya-theme');
+        $widgets = File::get($packagePath.'/resources/css/components/widgets.css');
+
+        $this->assertMatchesRegularExpression(
+            '/\.fi-wi-stats-overview-stat\s*\{[^}]*padding:\s*0\.375rem;[^}]*background:\s*var\(--mky-surface-muted\);/s',
+            $widgets,
+        );
+        $this->assertMatchesRegularExpression(
+            '/\.fi-wi-stats-overview-stat-content\s*\{[^}]*background:\s*var\(--mky-surface\);[^}]*box-shadow:\s*inset\s+0\s+0\s+0\s+1px\s+var\(--mky-border\);/s',
+            $widgets,
+        );
+    }
+
     public function test_english_and_indonesian_translations_keep_key_parity(): void
     {
         $packagePath = InstalledVersions::getInstallPath('kungfufafa/mekaya-theme');

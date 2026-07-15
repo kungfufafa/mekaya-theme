@@ -248,7 +248,6 @@ Publish with `php artisan vendor:publish --tag=mekaya-config`. Keys:
 | `admin.brand_icon` | Optional compact icon path from the host application's `/public` directory. Used only when no panel/project logo exists. |
 | `admin.brand_logo_height` | Optional logo height. `null` preserves the value configured on the panel. |
 | `admin.favicon` | Optional favicon path from `/public`. `null` preserves the panel favicon. |
-| `settings.name` / `settings.email` | Legacy fallback name / from-email surfaced in the appshell. The panel brand name or `APP_NAME` is preferred. |
 
 Mekaya does not force its bundled SVG identity onto the application. Branding resolves in
 this order: the Filament panel's `brandLogo()`, `admin.brand`, `admin.brand_icon`, then the

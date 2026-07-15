@@ -176,9 +176,6 @@
                                 <h4 class="font-heading truncate text-sm/4 font-medium text-gray-900 dark:text-white">
                                     {{ mekaya()->brandName() }}
                                 </h4>
-                                <span class="text-sm/4 text-gray-500 dark:text-gray-400">
-                                    {{ mekaya_setting('email') }}
-                                </span>
                             </div>
                         </div>
                     </div>

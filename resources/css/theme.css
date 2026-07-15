@@ -15,6 +15,16 @@
 @source inline("max-w-{md,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl}");
 
 @layer components {
+
+    /* Filament gives .fi-main height: 100%. Inside Mekaya's column appshell the
+       topbar already consumes part of the available height, so combining that
+       fixed percentage with flex-1 makes the main area visually overrun the
+       vertical frame even though .fi-main-ctn's margins still compute correctly. */
+    .fi-main.mky-main {
+        height: auto;
+        min-height: 0;
+    }
+
     /* Global search results dropdown: Filament scopes its wide desktop layout to
        .fi-topbar/.fi-sidebar ancestors, which this appshell drops in favour of
        mekaya's .mky-header/.mky-si. Restore the neat full-width (capped) dropdown

@@ -1,16 +1,16 @@
 .fi-modal.fi-modal-slide-over {
-  & .fi-modal-window-ctn {
+  & > .fi-modal-window-ctn {
     padding: var(--modal-padding);
-  }
 
-  & .fi-modal-window {
-    height: calc(100dvh - (2 * var(--modal-padding)));
-    border-radius: var(--mky-radius-frame);
-    background: var(--mky-surface);
-    box-shadow: 0 0 0 1px var(--mky-border), var(--mky-shadow-surface);
+    & > .fi-modal-window {
+      height: calc(100dvh - (2 * var(--modal-padding)));
+      border-radius: var(--mky-radius-frame);
+      background: var(--mky-surface);
+      box-shadow: 0 0 0 1px var(--mky-border), var(--mky-shadow-surface);
 
-    .fi-modal-footer-actions {
-      @apply flex-row-reverse;
+      .fi-modal-footer-actions {
+        @apply flex-row-reverse;
+      }
     }
   }
 }

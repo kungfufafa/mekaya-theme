@@ -181,7 +181,7 @@ class Mekaya
     public function brandName(): string|Htmlable
     {
         return Filament::getCurrentPanel()?->getBrandName()
-            ?? (string) config('mekaya.settings.name', config('app.name', 'Laravel'));
+            ?? (string) config('app.name', 'Laravel');
     }
 
     /**

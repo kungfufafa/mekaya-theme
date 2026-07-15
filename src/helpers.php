@@ -12,22 +12,6 @@ if (! function_exists('mekaya')) {
     }
 }
 
-if (! function_exists('mekaya_setting')) {
-    /**
-     * Read a Mekaya appshell setting (panel name/email).
-     *
-     * @param  string|null  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    function mekaya_setting($key = null, $default = null)
-    {
-        $settings = config('mekaya.settings', []);
-
-        return $key === null ? $settings : data_get($settings, $key, $default);
-    }
-}
-
 if (! function_exists('mekaya_panel_assets')) {
     /**
      * Build a URL for an asset published under the Mekaya vendor directory.
