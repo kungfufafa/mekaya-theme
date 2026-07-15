@@ -2,18 +2,22 @@
 
 namespace Apriansyahrs\MekayaTheme;
 
+use Composer\InstalledVersions;
 use Illuminate\Support\HtmlString;
+use OutOfBoundsException;
 
 /**
  * Mekaya appshell helper instance.
  *
  * Provides the generic appshell surface used by the customized
- * Filament panel (brand logo, panel path prefix, version label, asset URLs,
+ * Filament panel (brand logo, panel metadata, published asset URLs,
  * and a relocatable Vite input path so the panel theme/scripts resolve
  * wherever the package is installed).
  */
 class Mekaya
 {
+    protected const COMPOSER_PACKAGE = 'kungfufafa/mekaya-theme';
+
     protected string $basePath;
 
     public function __construct()
@@ -37,9 +41,86 @@ class Mekaya
      */
     public function viteInput(string $relative): string
     {
-        $packageRelative = trim(str_replace(base_path().DIRECTORY_SEPARATOR, '', $this->basePath), DIRECTORY_SEPARATOR);
+        $applicationPath = rtrim($this->normalizePath(base_path()), '/');
+        $packagePath = $this->normalizePath($this->composerInstallPath());
+        $applicationPrefix = $applicationPath.'/';
 
-        return $packageRelative.'/resources/'.ltrim($relative, '/');
+        $packageRelative = $this->pathStartsWith($packagePath, $applicationPrefix)
+            ? substr($packagePath, strlen($applicationPrefix))
+            : trim(str_replace($applicationPrefix, '', $packagePath), '/');
+
+        return $packageRelative.'/resources/'.ltrim(str_replace('\\', '/', $relative), '/');
+    }
+
+    /**
+     * Prefer Composer's lexical install path over __DIR__ so path-repository
+     * symlinks keep their app-local vendor path instead of resolving outside
+     * the Laravel application root.
+     */
+    protected function composerInstallPath(): string
+    {
+        if (! class_exists(InstalledVersions::class) || ! method_exists(InstalledVersions::class, 'getInstallPath')) {
+            return $this->basePath;
+        }
+
+        try {
+            $installPath = InstalledVersions::getInstallPath(self::COMPOSER_PACKAGE);
+        } catch (OutOfBoundsException) {
+            return $this->basePath;
+        }
+
+        return is_string($installPath) && $installPath !== ''
+            ? $installPath
+            : $this->basePath;
+    }
+
+    /**
+     * Collapse dot segments without realpath(), which would dereference a
+     * Composer path-repository symlink and lose the manifest's vendor key.
+     */
+    protected function normalizePath(string $path): string
+    {
+        $path = str_replace('\\', '/', $path);
+        $root = '';
+
+        if (preg_match('/^[A-Za-z]:\//', $path) === 1) {
+            $root = strtoupper(substr($path, 0, 2)).'/';
+            $path = substr($path, 3);
+        } elseif (str_starts_with($path, '/')) {
+            $root = '/';
+            $path = ltrim($path, '/');
+        }
+
+        $segments = [];
+
+        foreach (explode('/', $path) as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+
+            if ($segment === '..') {
+                if ($segments !== [] && end($segments) !== '..') {
+                    array_pop($segments);
+                } elseif ($root === '') {
+                    $segments[] = $segment;
+                }
+
+                continue;
+            }
+
+            $segments[] = $segment;
+        }
+
+        return $root.implode('/', $segments);
+    }
+
+    protected function pathStartsWith(string $path, string $prefix): bool
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            return strncasecmp($path, $prefix, strlen($prefix)) === 0;
+        }
+
+        return str_starts_with($path, $prefix);
     }
 
     public function prefix(): string
@@ -52,9 +133,14 @@ class Mekaya
         return (string) config('mekaya.admin.version', 'v2');
     }
 
+    public function assetsPath(): string
+    {
+        return 'vendor/mekaya';
+    }
+
     public function faviconPath(): string
     {
-        return (string) config('mekaya.admin.favicon', 'admin/images/favicons/favicon.ico');
+        return (string) config('mekaya.admin.favicon', $this->assetsPath().'/mekaya-icon.svg');
     }
 
     public function getBrandLogo(): ?HtmlString
@@ -72,6 +158,6 @@ class Mekaya
 
     public function asset(string $path): string
     {
-        return url($this->prefix().$path);
+        return asset($this->assetsPath().'/'.ltrim($path, '/'));
     }
 }

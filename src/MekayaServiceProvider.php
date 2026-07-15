@@ -2,13 +2,14 @@
 
 namespace Apriansyahrs\MekayaTheme;
 
+use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
+use Filament\Facades\Filament;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\ComponentAttributeBag;
 use Livewire\Livewire;
-use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
 
 class MekayaServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,7 @@ class MekayaServiceProvider extends ServiceProvider
     {
         // View namespace for view('mekaya::...') / @include('mekaya::...')
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'mekaya');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'mekaya');
 
         // Anonymous Blade components: x-mekaya::*
         Blade::anonymousComponentPath(__DIR__.'/../resources/views/components', 'mekaya');
@@ -30,10 +32,22 @@ class MekayaServiceProvider extends ServiceProvider
         // Custom sidebar Livewire component.
         Livewire::component('mekaya-sidebar', MekayaSidebar::class);
 
-        // Override Filament panel chrome views (topbar, user-menu, layout).
-        // Prepending makes the plugin's copies win over Filament's package views and
-        // any host-published vendor/filament-panels overrides — install = active.
-        View::prependNamespace('filament-panels', __DIR__.'/../resources/views/vendor/filament-panels');
+        // Override Filament chrome only while serving a panel that explicitly uses
+        // Mekaya. Installing the package must not restyle unrelated panels.
+        Filament::serving(function (): void {
+            $finder = View::getFinder();
+            $mekayaViewsPath = __DIR__.'/../resources/views/vendor/filament-panels';
+            $filamentPanelPaths = array_values(array_filter(
+                $finder->getHints()['filament-panels'] ?? [],
+                fn (string $path): bool => $path !== $mekayaViewsPath,
+            ));
+
+            if (Filament::getCurrentPanel()?->hasPlugin('mekaya')) {
+                array_unshift($filamentPanelPaths, $mekayaViewsPath);
+            }
+
+            View::replaceNamespace('filament-panels', $filamentPanelPaths);
+        });
 
         Blade::directive('blaze', fn (): string => '');
 
@@ -51,6 +65,6 @@ class MekayaServiceProvider extends ServiceProvider
         }
 
         $this->publishes([__DIR__.'/../config/mekaya.php' => config_path('mekaya.php')], 'mekaya-config');
-        $this->publishes([__DIR__.'/../resources/images' => public_path('admin/images')], 'mekaya-assets');
+        $this->publishes([__DIR__.'/../resources/images' => public_path('vendor/mekaya')], 'mekaya-assets');
     }
 }

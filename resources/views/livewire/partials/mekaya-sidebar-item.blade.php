@@ -26,14 +26,17 @@
 >
     <a
         {{ generate_href_html($url, $item->shouldOpenUrlInNewTab()) }}
-        x-on:click="window.matchMedia('(max-width: 1024px)').matches && $store.sidebar.close()"
+        x-on:click="window.innerWidth < $store.sidebar.breakpoint && $store.sidebar.close()"
         x-tooltip="{
             content: @js($item->getLabel()),
-            placement: 'right',
+            placement: document.dir === 'rtl' ? 'left' : 'right',
             theme: $store.theme,
             onShow: () => $store.sidebar.isCollapsed,
         }"
         class="mky-sidebar-item-link {{ ($isActive || $hasActiveChildren) ? 'mky-active' : '' }}"
+        @if ($isActive)
+            aria-current="page"
+        @endif
     >
         @if (filled($icon))
             {{
@@ -49,6 +52,7 @@
 
         <span
             class="mky-sidebar-item-label"
+            x-cloak
             x-show="! $store.sidebar.isCollapsed"
             x-transition:enter="transition-opacity duration-200"
             x-transition:enter-start="opacity-0"
@@ -58,7 +62,11 @@
         </span>
 
         @if (filled($badge) || $hasChildItems)
-            <span class="mky-sidebar-item-nav">
+            <span
+                class="mky-sidebar-item-nav"
+                x-cloak
+                x-show="! $store.sidebar.isCollapsed"
+            >
                 @if (filled($badge))
                     <span class="mky-sidebar-item-badge mky-sidebar-item-badge-{{ $badgeColor }}">
                         {{ $badge }}

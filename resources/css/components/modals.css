@@ -5,10 +5,24 @@
 
   & .fi-modal-window {
     height: calc(100dvh - (2 * var(--modal-padding)));
-    @apply rounded-lg shadow-lg;
+    border-radius: var(--mky-radius-frame);
+    background: var(--mky-surface);
+    box-shadow: 0 0 0 1px var(--mky-border), var(--mky-shadow-surface);
 
     .fi-modal-footer-actions {
       @apply flex-row-reverse;
     }
+  }
+}
+
+.fi-modal:not(.fi-modal-slide-over):not(.fi-width-screen) .fi-modal-window {
+  border-radius: var(--mky-radius-frame);
+  background: var(--mky-surface);
+  box-shadow: 0 0 0 1px var(--mky-border), 0 24px 64px -24px color-mix(in oklab, black 58%, transparent);
+}
+
+@media (max-width: 39.999rem) {
+  :root {
+    --modal-padding: 0.5rem;
   }
 }

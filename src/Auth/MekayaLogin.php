@@ -2,9 +2,11 @@
 
 namespace Apriansyahrs\MekayaTheme\Auth;
 
+use Filament\Pages\Auth\Login;
+
 if (! class_exists('Apriansyahrs\MekayaTheme\Auth\BaseLogin', false)) {
-    if (class_exists(\Filament\Pages\Auth\Login::class)) {
-        class_alias(\Filament\Pages\Auth\Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
+    if (class_exists(Login::class)) {
+        class_alias(Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
     } else {
         class_alias(\Filament\Auth\Pages\Login::class, 'Apriansyahrs\MekayaTheme\Auth\BaseLogin');
     }

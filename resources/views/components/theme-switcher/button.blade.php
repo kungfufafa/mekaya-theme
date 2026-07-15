@@ -4,13 +4,13 @@
 ])
 
 @php
-    $ariaLabel = match ($theme) {
-        'light' => 'Enable light theme',
-        'dark' => 'Enable dark theme',
-        default => 'Enable system theme',
+    $themeKey = match ($theme) {
+        'light', 'dark' => $theme,
+        default => 'system',
     };
 
-    $label = ucfirst($theme);
+    $ariaLabel = __("mekaya::ui.theme.{$themeKey}.aria_label");
+    $label = __("mekaya::ui.theme.{$themeKey}.label");
 @endphp
 
 <button

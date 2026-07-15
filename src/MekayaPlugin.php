@@ -2,6 +2,10 @@
 
 namespace Apriansyahrs\MekayaTheme;
 
+use Apriansyahrs\MekayaTheme\Auth\MekayaLogin;
+use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
+use Apriansyahrs\MekayaTheme\Auth\MekayaResetPassword;
+use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Colors\Color;
@@ -10,10 +14,6 @@ use Filament\View\PanelsRenderHook;
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
-use Apriansyahrs\MekayaTheme\Auth\MekayaLogin;
-use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
-use Apriansyahrs\MekayaTheme\Auth\MekayaResetPassword;
-use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
 
 /**
  * Mekaya appshell as a Filament panel plugin.
@@ -26,7 +26,7 @@ use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
  */
 class MekayaPlugin implements Plugin
 {
-    protected string $brandLogoHeight = '2rem';
+    protected ?string $brandLogoHeight = null;
 
     protected string $sidebarWidth = '16.5rem';
 
@@ -98,16 +98,14 @@ class MekayaPlugin implements Plugin
             ->sidebarWidth($this->sidebarWidth)
             ->collapsedSidebarWidth($this->collapsedSidebarWidth)
             ->profile(isSimple: false)
-            ->maxContentWidth(enum_exists(\Filament\Support\Enums\Width::class) ? \Filament\Support\Enums\Width::Full : \Filament\Support\Enums\MaxWidth::Full)
+            ->maxContentWidth(Width::Full)
             ->favicon(asset(mekaya()->faviconPath()))
             ->brandLogo(fn (): HtmlString => new HtmlString(Blade::render('<x-mekaya::brand class="size-8" />')))
-            ->brandLogoHeight($this->brandLogoHeight)
+            ->brandLogoHeight($this->brandLogoHeight ?? (string) config('mekaya.admin.brand_logo_height', '2rem'))
             ->colors($this->colors)
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): string => <<<'HTML'
-                    <link rel="dns-prefetch" href="//rsms.me" />
-                    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
                     <link rel="preconnect" href="https://fonts.googleapis.com" />
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
                     <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />

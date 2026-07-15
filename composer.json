@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.2",
         "filament/filament": "^4.0",
         "livewire/livewire": "^3.0",
         "mckenziearts/blade-untitledui-icons": "^1.5"

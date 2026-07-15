@@ -1,0 +1,133 @@
+/* Optional awcodes/overlook integration. It is inert when the plugin is absent. */
+#overlook-widget > div {
+  display: grid;
+  grid-template-columns: var(--cols-default, repeat(1, minmax(0, 1fr)));
+  gap: 1.75rem;
+}
+
+#overlook-widget .overlook-card {
+  position: relative;
+  min-height: 8rem;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 0;
+  border-radius: var(--mky-radius-surface) !important;
+  background: var(--mky-surface) !important;
+  background-image: none !important;
+  box-shadow:
+    0 0 0 6px var(--mky-surface-muted),
+    0 0 0 7px var(--mky-border),
+    var(--mky-shadow-surface) !important;
+}
+
+#overlook-widget .overlook-card .fi-section-content-ctn,
+#overlook-widget .overlook-card .fi-section-content {
+  position: relative;
+  min-height: 8rem;
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--mky-radius-surface) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#overlook-widget .overlook-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 1rem;
+  border-radius: var(--mky-radius-surface);
+  color: var(--gray-600);
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.dark #overlook-widget .overlook-link {
+  color: var(--gray-400);
+}
+
+#overlook-widget .overlook-link:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--primary-500) !important;
+}
+
+#overlook-widget .overlook-name {
+  position: relative;
+  z-index: 1;
+  display: block;
+  max-width: calc(100% - 4rem);
+  color: var(--gray-500);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+}
+
+.dark #overlook-widget .overlook-name {
+  color: var(--gray-400);
+}
+
+#overlook-widget .overlook-count {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1;
+  color: var(--gray-950);
+  font-family: var(--font-heading);
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dark #overlook-widget .overlook-count {
+  color: white;
+}
+
+#overlook-widget .overlook-icon {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  width: auto;
+  height: 6rem;
+  color: var(--gray-400) !important;
+  opacity: 0.22;
+  transition: opacity 180ms var(--mky-ease-out);
+}
+
+.dark #overlook-widget .overlook-icon {
+  color: var(--gray-500) !important;
+  opacity: 0.28;
+}
+
+#overlook-widget .overlook-link:hover .overlook-icon,
+#overlook-widget .overlook-link:focus-visible .overlook-icon {
+  opacity: 0.45;
+}
+
+@media (min-width: 40rem) {
+  #overlook-widget > div {
+    grid-template-columns: var(--cols-sm, repeat(2, minmax(0, 1fr)));
+  }
+}
+
+@media (min-width: 48rem) {
+  #overlook-widget > div {
+    grid-template-columns: var(--cols-md, repeat(3, minmax(0, 1fr)));
+  }
+}
+
+@media (min-width: 64rem) {
+  #overlook-widget > div {
+    grid-template-columns: var(--cols-lg, repeat(4, minmax(0, 1fr)));
+  }
+}
+
+@media (min-width: 80rem) {
+  #overlook-widget > div {
+    grid-template-columns: var(--cols-xl, repeat(4, minmax(0, 1fr)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #overlook-widget .overlook-icon {
+    transition: none;
+  }
+}

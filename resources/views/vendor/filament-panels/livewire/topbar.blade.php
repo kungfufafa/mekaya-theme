@@ -2,18 +2,26 @@
     class="mky-header sticky top-0 z-20 flex h-16 shrink-0 border-b border-gray-200 bg-gray-50 lg:h-auto lg:rounded-tl-xl lg:py-2 dark:border-white/10 dark:bg-gray-950"
 >
     <button
+        type="button"
         @click.stop="$store.sidebar.open()"
-        class="border-r border-gray-200 px-4 text-gray-500 lg:hidden dark:border-white/10"
-        aria-label="Open sidebar"
+        class="mky-topbar-icon-control inline-flex items-center justify-center border-r border-gray-200 px-4 text-gray-500 transition-colors hover:text-gray-700 lg:hidden dark:border-white/10 dark:text-gray-400 dark:hover:text-white"
+        aria-label="{{ __('mekaya::ui.sidebar.open') }}"
+        aria-controls="mekaya-mobile-sidebar"
+        x-bind:aria-expanded="$store.sidebar.isOpen"
     >
         <x-untitledui-menu-03 class="size-6" aria-hidden="true" />
     </button>
 
     @if (filament()->isSidebarCollapsibleOnDesktop())
         <button
+            type="button"
             x-on:click="$store.sidebar.toggleCollapse()"
-            class="hidden border-r border-gray-200 px-4 text-gray-500 hover:text-gray-700 lg:block dark:border-white/10 dark:text-gray-400 dark:hover:text-white"
-            aria-label="{{ __('Toggle sidebar') }}"
+            class="mky-topbar-icon-control hidden items-center justify-center border-r border-gray-200 px-4 text-gray-500 transition-colors hover:text-gray-700 lg:inline-flex dark:border-white/10 dark:text-gray-400 dark:hover:text-white"
+            x-bind:aria-label="$store.sidebar.isCollapsed
+                ? @js(__('filament-panels::layout.actions.sidebar.expand.label'))
+                : @js(__('filament-panels::layout.actions.sidebar.collapse.label'))"
+            x-bind:aria-expanded="! $store.sidebar.isCollapsed"
+            aria-controls="mekaya-desktop-sidebar"
         >
             <svg
                 class="size-6 text-gray-400 dark:text-gray-500"
@@ -49,15 +57,16 @@
 
             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER) }}
         </div>
-        <div class="flex items-center gap-x-3">
-            {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_END) }}
-
+        <div class="fi-topbar-end flex items-center gap-x-3">
             <a
                 href="{{ url('/') }}"
                 target="_blank"
-                class="hidden items-center rounded-lg p-1 text-gray-500 ring-1 ring-gray-200 hover:bg-gray-50 hover:text-gray-700 lg:inline-flex dark:text-gray-400 dark:ring-white/10 dark:hover:bg-gray-800 dark:hover:text-white"
+                rel="noopener noreferrer"
+                class="mky-topbar-icon-control hidden items-center justify-center rounded-lg p-1 text-gray-500 ring-1 ring-gray-200 transition-colors hover:bg-gray-50 hover:text-gray-700 lg:inline-flex dark:text-gray-400 dark:ring-white/10 dark:hover:bg-gray-800 dark:hover:text-white"
+                aria-label="{{ mekaya_setting('name') }}"
+                title="{{ mekaya_setting('name') }}"
             >
-                <x-filament::icon icon="heroicon-o-globe-alt" class="size-6" />
+                <x-filament::icon icon="heroicon-o-globe-alt" class="size-6" aria-hidden="true" />
             </a>
 
             @if (filament()->auth()->check())
@@ -72,5 +81,7 @@
                 @endif
             @endif
         </div>
+
+        {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_END) }}
     </div>
 </div>

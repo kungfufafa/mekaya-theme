@@ -6,8 +6,8 @@
  * light + dark mode. Only solid colored buttons get the gradient; outlined
  * and neutral buttons keep Filament's default look.
  *
- * Lives in the `utilities` layer so it overrides Filament's
- * `components`-layered button rules. */
+ * Loaded after Filament's component styles so the treatment remains scoped to
+ * solid buttons while preserving Filament's states and color variables. */
 
 .fi-btn.fi-color:not(.fi-outlined):not(label) {
     background-image: linear-gradient(

@@ -1,0 +1,29 @@
+.fi-tabs:not(.fi-contained) {
+  padding: 0.375rem;
+  border-radius: var(--mky-radius-frame);
+  background: var(--mky-surface-muted);
+  box-shadow: 0 0 0 1px var(--mky-border), var(--mky-shadow-surface);
+}
+
+.fi-tabs-item {
+  min-height: 2.5rem;
+}
+
+.fi-tabs-item:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: -2px;
+}
+
+.fi-no-notification:not(.fi-inline) {
+  border-radius: var(--mky-radius-frame);
+  background: var(--mky-surface);
+  box-shadow: 0 0 0 1px var(--mky-border), var(--mky-shadow-surface);
+}
+
+.fi-in-entry-label {
+  @apply font-medium;
+}
+
+.fi-in-entry-content {
+  @apply leading-6;
+}

@@ -3,3 +3,23 @@
     @apply py-4 lg:py-4;
   }
 }
+
+.fi-input-wrp:not(.fi-disabled) {
+  transition:
+    box-shadow 160ms var(--mky-ease-out),
+    background-color 160ms var(--mky-ease-out);
+}
+
+.fi-input-wrp:not(.fi-disabled):not(.fi-invalid):hover:not(:focus-within) {
+  box-shadow: 0 0 0 1px var(--mky-border-strong), 0 1px 2px color-mix(in oklab, var(--gray-950) 7%, transparent);
+}
+
+.fi-fo-field-wrp-error-message {
+  @apply font-medium;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fi-input-wrp:not(.fi-disabled) {
+    transition: none;
+  }
+}

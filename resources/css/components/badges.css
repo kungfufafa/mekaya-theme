@@ -28,9 +28,10 @@
   }
 }
 
-/* Mencegah badge Filament melar (stretch) menjadi full-width di Infolist / Table */
-.fi-badge {
-  width: fit-content !important;
-  align-self: flex-start !important;
-  justify-self: start !important;
+/* Keep data badges compact without changing badges used by tabs and controls. */
+.fi-in-entry .fi-badge,
+.fi-ta-cell .fi-badge {
+  width: fit-content;
+  align-self: flex-start;
+  justify-self: start;
 }

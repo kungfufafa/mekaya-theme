@@ -10,22 +10,44 @@
         && enum_exists(\Filament\Enums\UserMenuPosition::class)
         && method_exists(filament(), 'getUserMenuPosition')
         && filament()->getUserMenuPosition() === \Filament\Enums\UserMenuPosition::Sidebar;
+    $defaultCollapsedGroups = collect($navigation)
+        ->filter(fn ($group): bool => filled($group->getLabel()) && $group->isCollapsed())
+        ->map(fn ($group): string => $group->getLabel())
+        ->values()
+        ->all();
 @endphp
 
 <div class="h-full">
     <script>
-        if (
-            localStorage.getItem('collapsedGroups') === null ||
-            localStorage.getItem('collapsedGroups') === 'null'
-        ) {
-            localStorage.setItem('collapsedGroups', JSON.stringify([]))
-        }
+        (() => {
+            const readGroups = (key) => {
+                try {
+                    const groups = JSON.parse(localStorage.getItem(key))
+
+                    return Array.isArray(groups) ? groups : null
+                } catch {
+                    return null
+                }
+            }
+            const groups = readGroups('collapsedGroups')
+                ?? readGroups('sidebar-collapsed-groups')
+                ?? @js($defaultCollapsedGroups)
+
+            try {
+                localStorage.setItem('collapsedGroups', JSON.stringify(groups))
+                localStorage.setItem('sidebar-collapsed-groups', JSON.stringify(groups))
+            } catch {
+                // The sidebar remains usable when browser storage is unavailable.
+            }
+        })()
     </script>
 
     <!-- Desktop Sidebar -->
     <aside
+        id="mekaya-desktop-sidebar"
         class="mky-si hidden h-full lg:flex lg:shrink-0"
         x-bind:class="{ 'mky-si-collapsed': $store.sidebar.isCollapsed }"
+        aria-label="{{ mekaya_setting('name') }}"
     >
         <div class="mky-si-content h-full flex-1 overflow-hidden transition-[width] duration-200">
             <div class="from-primary-600 to-primary-100 dark:to-primary-600/10 h-1 bg-linear-to-br"></div>
@@ -37,7 +59,8 @@
                         <x-mekaya::brand class="size-6 shrink-0" aria-hidden="true" />
 
                         <div
-                            class="min-w-0 truncate overflow-hidden transition-all duration-200"
+                            class="mky-sidebar-brand-copy min-w-0 truncate overflow-hidden transition-all duration-200"
+                            x-cloak
                             x-show="! $store.sidebar.isCollapsed"
                             x-transition:enter="transition-opacity delay-100 duration-200"
                             x-transition:enter-start="opacity-0"
@@ -61,10 +84,11 @@
                             class="pointer-events-none absolute top-0 right-0.5 left-0 z-10 h-6 bg-linear-to-b from-gray-50 to-transparent dark:from-gray-950"
                         ></div>
 
-                        <div class="h-full overflow-y-auto">
-                            <nav class="mky-si-nav px-3 py-3">
+                        <div class="mky-si-scroll h-full overflow-y-auto">
+                            <nav class="mky-si-nav px-3 py-3" aria-label="{{ mekaya_setting('name') }}">
                                 @include('mekaya::livewire.partials.mekaya-sidebar-navigation', [
                                     'navigation' => $navigation,
+                                    'navigationIdPrefix' => 'desktop',
                                 ])
                             </nav>
                         </div>
@@ -96,6 +120,7 @@
 
     <div x-cloak x-show="$store.sidebar.isOpen" class="lg:hidden">
         <div
+            class="mky-sidebar-backdrop fixed inset-0 z-40 bg-gray-950/50 backdrop-blur-xs dark:bg-gray-950/75"
             x-show="$store.sidebar.isOpen"
             x-transition:enter="transition-opacity duration-300 ease-linear"
             x-transition:enter-start="opacity-0"
@@ -104,10 +129,17 @@
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
             @click="$store.sidebar.close()"
-            class="fixed inset-0 z-40 bg-gray-950/50 backdrop-blur-xs dark:bg-gray-950/75"
+            aria-hidden="true"
         ></div>
 
-        <div class="pointer-events-none fixed inset-0 z-50 flex">
+        <div
+            id="mekaya-mobile-sidebar"
+            class="mky-sidebar-mobile-dialog pointer-events-none fixed inset-0 z-50 flex"
+            role="dialog"
+            aria-modal="true"
+            aria-label="{{ mekaya_setting('name') }}"
+            x-trap.noscroll="$store.sidebar.isOpen"
+        >
             <div
                 x-cloak
                 x-show="$store.sidebar.isOpen"
@@ -117,7 +149,7 @@
                 x-transition:leave="transform transition duration-200 ease-in-out"
                 x-transition:leave-start="translate-x-0"
                 x-transition:leave-end="-translate-x-full"
-                class="pointer-events-auto relative flex w-full max-w-xs flex-col bg-white dark:bg-gray-900"
+                class="mky-sidebar-mobile-panel pointer-events-auto relative flex w-full max-w-xs flex-col bg-white dark:bg-gray-900"
             >
                 <div class="from-primary-600 to-primary-100 dark:to-primary-600/10 h-1 bg-linear-to-br"></div>
 
@@ -127,7 +159,11 @@
                         <div
                             class="relative flex items-start gap-3 rounded-lg bg-white py-2 shadow-xs ring-1 ring-gray-200 dark:bg-white/5 dark:ring-white/20"
                         >
-                            <a href="{{ filament()->getUrl() }}" class="shrink-0">
+                            <a
+                                href="{{ filament()->getUrl() }}"
+                                class="shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                                aria-label="{{ mekaya_setting('name') }}"
+                            >
                                 <x-mekaya::brand class="size-8" aria-hidden="true" />
                                 <span class="absolute inset-0"></span>
                             </a>
@@ -151,10 +187,11 @@
                                 class="pointer-events-none absolute top-0 right-0.5 left-0 z-10 h-6 bg-linear-to-b from-gray-50 to-transparent dark:from-gray-950"
                             ></div>
 
-                            <div class="h-full overflow-y-auto">
-                                <nav class="mky-si-nav px-3 py-3">
+                            <div class="mky-si-scroll h-full overflow-y-auto">
+                                <nav class="mky-si-nav px-3 py-3" aria-label="{{ mekaya_setting('name') }}">
                                     @include('mekaya::livewire.partials.mekaya-sidebar-navigation', [
                                         'navigation' => $navigation,
+                                        'navigationIdPrefix' => 'mobile',
                                     ])
                                 </nav>
                             </div>
@@ -185,11 +222,13 @@
 
             <div class="pointer-events-auto z-10 p-2">
                 <button
+                    type="button"
                     x-show="$store.sidebar.isOpen"
                     @click="$store.sidebar.close()"
-                    class="flex size-10 items-center justify-center rounded-full bg-gray-900/50 text-white hover:bg-gray-900/70 focus:outline-none"
+                    class="mky-sidebar-close-control flex size-11 items-center justify-center rounded-full bg-gray-900/60 text-white transition-colors hover:bg-gray-900/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    aria-label="{{ __('mekaya::ui.sidebar.close') }}"
                 >
-                    <span class="sr-only">Close sidebar</span>
+                    <span class="sr-only">{{ __('mekaya::ui.sidebar.close') }}</span>
                     <x-untitledui-x-close class="size-5" aria-hidden="true" />
                 </button>
             </div>

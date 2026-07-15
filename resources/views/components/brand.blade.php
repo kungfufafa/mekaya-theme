@@ -5,7 +5,7 @@
 @else
     <img
         {{ $attributes }}
-        src="{{ asset(mekaya()->prefix() . '/images/mekaya-icon.svg') }}"
+        src="{{ asset(mekaya()->assetsPath() . '/mekaya-icon.svg') }}"
         alt="Mekaya"
     />
 @endif

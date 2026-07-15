@@ -9,7 +9,7 @@ set — no host-app glue required.
 
 ## Requirements
 
-- PHP `^8.3`
+- PHP `^8.2`
 - Laravel `^11` / `^12` / `^13`
 - Filament `^4.0`
 - Node.js + npm (for the Vite build)
@@ -52,7 +52,7 @@ Composer will also pull in the bundled UntitledUI Blade icons dependency
 ## 3. Publish assets & (optionally) config
 
 ```bash
-php artisan vendor:publish --tag=mekaya-assets    # brand images -> public/admin/images
+php artisan vendor:publish --tag=mekaya-assets    # brand images -> public/vendor/mekaya
 php artisan vendor:publish --tag=mekaya-config    # optional: config/mekaya.php
 ```
 
@@ -146,8 +146,21 @@ export default defineConfig({
 });
 ```
 
-> If you installed via a path repository (e.g. `packages/kungfufafa/mekaya-theme`),
-> use that path instead of `vendor/...`.
+> Keep the `vendor/kungfufafa/mekaya-theme/...` entries for Composer path
+> repositories too. The most portable local setup mirrors the package:
+>
+> ```json
+> {
+>   "type": "path",
+>   "url": "../mekaya-theme",
+>   "options": { "symlink": false }
+> }
+> ```
+>
+> For a symlinked path repository, also set
+> `resolve: { preserveSymlinks: true }` in `vite.config.js`. This keeps relative
+> Composer CSS imports and Vite manifest keys anchored to the app's `vendor/`
+> path. Both install modes are covered by Mekaya's lexical path resolver.
 
 Your `resources/css/app.css` should import Tailwind (the Filament installer normally adds
 this):
@@ -176,14 +189,17 @@ Then visit `/admin` → you'll be redirected to the Mekaya-themed login page.
 
 ## What you get out of the box
 
-- **Mekaya sidebar + topbar** replacing Filament's default chrome (activated automatically
-  via `View::prependNamespace('filament-panels', ...)` — no publishing needed).
+- **Mekaya sidebar + topbar** replacing Filament's default chrome only on panels
+  that register the plugin — no view publishing needed.
+- **Unified Filament surfaces** for sections, stats, chart/table widgets, tables,
+  forms, tabs, modals, notifications, and optional `awcodes/overlook` cards.
 - **Themed auth pages** — branded login, request-password-reset, and reset-password pages
   built on the `<x-mekaya::auth-card>` component.
 - **UntitledUI icons** available as `<x-untitledui-*>` Blade components in your views.
 - **Mekaya Blade components** — `<x-mekaya::brand>`, `<x-mekaya::auth-card>`,
   `<x-mekaya::card>`, `<x-mekaya::section-heading>`, `<x-mekaya::theme-switcher::button>`.
-- **Color theme + fonts** (Inter / Figtree) wired through render hooks.
+- **Panel-aware colors + fonts** — semantic colors and the Filament-registered
+  body font are respected, with Figtree reserved for headings.
 
 ## Customization
 
@@ -209,11 +225,11 @@ Publish with `php artisan vendor:publish --tag=mekaya-config`. Keys:
 
 | Key | Purpose |
 |-----|---------|
-| `admin.path` | Panel path / asset URL prefix. Should match the panel's `->path()`. |
-| `admin.version` | Version label surfaced in the appshell. |
+| `admin.path` | Panel path. Should match the panel's `->path()`. |
+| `admin.version` | Optional panel version metadata exposed through `mekaya()->version()`. |
 | `admin.brand` | Optional brand image path (relative to `/public`). `null` falls back to the bundled Mekaya icon. |
 | `admin.brand_logo_height` | Brand logo height in the panel header. |
-| `admin.favicon` | Favicon path (relative to `/public`). Provide your own; not bundled. |
+| `admin.favicon` | Favicon path relative to `/public`. Defaults to the published Mekaya icon. |
 | `settings.name` / `settings.email` | Panel name / from-email surfaced in the appshell. |
 
 ### Auth pages
@@ -240,15 +256,13 @@ Filament methods **after** `->plugin(...)`:
 ## Theme & assets notes
 
 - The plugin ships raw CSS/JS source. The host's Vite build compiles `theme.css` so
-  `@apply` resolves against the host's `@theme` tokens, and Tailwind scans the plugin's
-  views (`@source` entries live in `resources/css/theme.css`). The `@source` paths are
-  relative to the package and resolve correctly for both `vendor/...` and
-  `packages/...` installs.
-- The three Filament chrome overrides (topbar, user-menu, layout) are activated
-  automatically — no publishing needed. To override one of them in the host, prepend a
-  higher-priority path in your `AppServiceProvider::boot()` after this plugin boots.
-- Fonts (Inter via rsms.me, Figtree via Google Fonts) are injected through a
-  `HEAD_END` render hook. Remove/replace them by overriding the hook on the panel.
+  `@apply` resolves against the host's `@theme` tokens, and Tailwind scans both
+  plugin and host views (`@source` entries live in `resources/css/theme.css`).
+- The Filament chrome overrides (topbar, user-menu, layout) are activated only
+  while Filament serves a panel with the Mekaya plugin. Other panels retain
+  their own namespace priority and views.
+- Mekaya reuses the font registered by the panel for body copy. Figtree is loaded
+  from Google Fonts for headings and falls back to the panel/system sans font.
 
 ## Multiple panels
 

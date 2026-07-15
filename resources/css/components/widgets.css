@@ -1,0 +1,65 @@
+.fi-wi-stats-overview-stat {
+  margin: 0.375rem;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--mky-radius-surface);
+  background: var(--mky-surface);
+  box-shadow:
+    0 0 0 6px var(--mky-surface-muted),
+    0 0 0 7px var(--mky-border),
+    var(--mky-shadow-surface);
+  transition:
+    transform 180ms var(--mky-ease-out),
+    box-shadow 180ms var(--mky-ease-out);
+
+  & .fi-wi-stats-overview-stat-content {
+    @apply gap-y-2.5;
+  }
+
+  & .fi-wi-stats-overview-stat-label {
+    @apply font-medium tracking-normal;
+  }
+
+  & .fi-wi-stats-overview-stat-value {
+    @apply font-heading text-2xl font-semibold sm:text-3xl;
+  }
+
+  & .fi-wi-stats-overview-stat-description {
+    @apply leading-5;
+  }
+
+  & .fi-wi-stats-overview-stat-chart {
+    border-radius: 0 0 var(--mky-radius-surface) var(--mky-radius-surface);
+  }
+}
+
+a.fi-wi-stats-overview-stat:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 6px var(--mky-surface-muted),
+    0 0 0 7px var(--mky-border-strong),
+    0 16px 32px -24px color-mix(in oklab, var(--gray-950) 48%, transparent);
+}
+
+a.fi-wi-stats-overview-stat:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 4px;
+}
+
+.fi-wi-chart > .fi-section .fi-wi-chart-canvas-ctn {
+  @apply min-h-56;
+}
+
+.fi-wi-table > .fi-ta {
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fi-wi-stats-overview-stat {
+    transition: none;
+  }
+
+  a.fi-wi-stats-overview-stat:hover {
+    transform: none;
+  }
+}

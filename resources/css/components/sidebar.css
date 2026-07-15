@@ -5,7 +5,7 @@
     @apply border-t border-transparent;
 
     .mky-sidebar-group-label {
-      @apply flex items-center justify-between px-2 pb-3 text-sm/4 font-medium text-gray-900 dark:text-gray-200;
+      @apply flex items-center justify-between rounded-md px-2 pb-3 text-sm/4 font-medium text-gray-900 outline-none ring-primary-500 focus-visible:ring-2 focus-visible:ring-inset dark:text-gray-200;
 
       .mky-sidebar-group-toggle {
         @apply text-gray-400 dark:text-gray-500;
@@ -40,7 +40,7 @@
         }
 
         .mky-sidebar-item-link {
-          @apply flex items-center gap-3 p-2;
+          @apply flex items-center gap-3 rounded-lg p-2 outline-none ring-primary-500 transition-colors focus-visible:ring-2 focus-visible:ring-inset;
         }
       }
 
@@ -206,5 +206,49 @@ html.sidebar-collapsed .mky-si-content,
 
   &:hover .mky-sidebar-item-link::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'/%3E%3Cpolyline points='176 104 224 152 176 200' fill='none' stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3Cpath d='M32,56a96,96,0,0,0,96,96h96' fill='none' stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='16'/%3E%3C/svg%3E");
+  }
+}
+
+.mky-topbar-icon-control {
+  @apply shrink-0 outline-none ring-primary-500 focus-visible:ring-2 focus-visible:ring-inset;
+}
+
+@media (pointer: coarse) {
+  .mky-sidebar-group-label,
+  .mky-sidebar-item-link {
+    min-height: 2.75rem;
+  }
+
+  .mky-header .mky-topbar-icon-control,
+  .mky-header .mky-user-menu-trigger {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .mky-header .mky-user-menu-trigger {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mky-si-content,
+  .mky-sidebar-brand-copy,
+  .mky-sidebar-group-toggle,
+  .mky-sidebar-group-items,
+  .mky-sidebar-item-link,
+  .mky-sidebar-item-label,
+  .mky-sidebar-backdrop,
+  .mky-sidebar-mobile-panel,
+  .mky-sidebar-close-control,
+  .mky-topbar-icon-control,
+  .mky-user-menu-trigger {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .mky-si-scroll {
+    scroll-behavior: auto !important;
   }
 }

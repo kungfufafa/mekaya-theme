@@ -6,13 +6,11 @@
 /* Plugin's own Blade views (sidebar, components, chrome overrides). */
 @source '../views/**/*.blade.php';
 
-/* Host app + host views + Filament vendor views.
-   Paths are relative to packages/mekaya/admin-panel/resources/css — five
-   levels up to the project root. The same depth applies to a vendor install
-   (vendor/mekaya/admin-panel/resources/css), so these stay correct either way. */
+/* Host app + host views. Paths are relative to this package's resources/css
+   directory — five levels up to the consuming project root. */
 @source '../../../../../app/**/*.php';
 @source '../../../../../resources/views/**/*.blade.php';
-@source '../../../../../vendor/filament/**/*.blade.php';
+@source '../../../../../vendor/awcodes/overlook/resources/views/**/*.blade.php';
 
 @source inline("max-w-{md,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl}");
 

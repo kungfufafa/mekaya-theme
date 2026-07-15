@@ -30,7 +30,7 @@ if (! function_exists('mekaya_setting')) {
 
 if (! function_exists('mekaya_panel_assets')) {
     /**
-     * Build a panel-relative asset URL (prefixed with the panel path).
+     * Build a URL for an asset published under the Mekaya vendor directory.
      *
      * @param  string  $asset
      */
