@@ -92,6 +92,8 @@
                                     'navigation' => $navigation,
                                     'navigationIdPrefix' => 'desktop',
                                 ])
+
+                                {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_END) }}
                             </nav>
                         </div>
 
@@ -194,6 +196,8 @@
                                         'navigation' => $navigation,
                                         'navigationIdPrefix' => 'mobile',
                                     ])
+
+                                    {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_END) }}
                                 </nav>
                             </div>
 

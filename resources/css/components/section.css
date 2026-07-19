@@ -22,7 +22,8 @@
   }
 
   & > .fi-section-content-ctn {
-    overflow: hidden;
+    /* visible: searchable Select dropdown must escape this surface */
+    overflow: visible;
     border: 0;
     border-radius: var(--mky-radius-surface);
     background: var(--mky-surface);
@@ -66,7 +67,8 @@
   box-shadow: 0 0 0 1px var(--mky-border);
 
   > .fi-fo-repeater-item-content {
-    overflow: hidden;
+    /* visible: searchable Select dropdown must escape this surface */
+    overflow: visible;
     border: 0;
     border-radius: var(--mky-radius-surface);
     background: var(--mky-surface);
