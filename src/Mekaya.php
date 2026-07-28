@@ -185,6 +185,62 @@ class Mekaya
     }
 
     /**
+     * Whether the sidebar Documentation footer link should render.
+     * Requires an explicit enable (config or plugin) and a non-empty URL.
+     */
+    public function documentationEnabled(): bool
+    {
+        $plugin = $this->currentPlugin();
+        $enabled = $plugin?->getDocumentationEnabled()
+            ?? (bool) config('mekaya.documentation.enabled', false);
+
+        return $enabled && filled($this->documentationUrl());
+    }
+
+    public function documentationUrl(): ?string
+    {
+        $plugin = $this->currentPlugin();
+        $url = $plugin?->getDocumentationUrl()
+            ?? config('mekaya.documentation.url');
+
+        return filled($url) ? (string) $url : null;
+    }
+
+    public function documentationLabel(): string
+    {
+        $plugin = $this->currentPlugin();
+        $label = $plugin?->getDocumentationLabel()
+            ?? config('mekaya.documentation.label');
+
+        return filled($label)
+            ? (string) $label
+            : (string) __('mekaya::ui.sidebar.documentation');
+    }
+
+    public function documentationOpensInNewTab(): bool
+    {
+        $plugin = $this->currentPlugin();
+
+        return $plugin?->getDocumentationOpenInNewTab()
+            ?? (bool) config('mekaya.documentation.open_in_new_tab', true);
+    }
+
+    protected function currentPlugin(): ?MekayaPlugin
+    {
+        $panel = Filament::getCurrentPanel();
+
+        if ($panel === null || ! $panel->hasPlugin('mekaya')) {
+            return null;
+        }
+
+        try {
+            return MekayaPlugin::get();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
      * @param  mixed  $hook
      */
     public function getRenderHook($hook): HtmlString

@@ -15,6 +15,7 @@ return [
         'open' => 'Buka bilah samping',
         'toggle' => 'Buka atau tutup bilah samping',
         'close' => 'Tutup bilah samping',
+        'documentation' => 'Dokumentasi',
     ],
 
     'theme' => [

@@ -232,9 +232,14 @@ use Filament\Support\Colors\Color;
         ->sidebarWidth('18rem')
         ->collapsedSidebarWidth('4.5rem')
         ->brandLogoHeight('2rem')
-        ->colors(['primary' => Color::Amber]),
+        ->colors(['primary' => Color::Amber])
+        ->documentation('https://docs.example.com'),
 )
 ```
+
+Enable a Shopper-style **Documentation** link in the sidebar footer with
+`->documentation('https://...')`. Pass `false` to force it off. Optional named
+arguments: `label:` and `newTab:`. Plugin values override config/env.
 
 ### Config (`config/mekaya.php`)
 
@@ -248,6 +253,10 @@ Publish with `php artisan vendor:publish --tag=mekaya-config`. Keys:
 | `admin.brand_icon` | Optional compact icon path from the host application's `/public` directory. Used only when no panel/project logo exists. |
 | `admin.brand_logo_height` | Optional logo height. `null` preserves the value configured on the panel. |
 | `admin.favicon` | Optional favicon path from `/public`. `null` preserves the panel favicon. |
+| `documentation.enabled` | Show the sidebar Documentation footer link (`MEKAYA_DOCS_ENABLED`). Default `false`. |
+| `documentation.url` | Destination URL (`MEKAYA_DOCS_URL`). Required for the link to render. |
+| `documentation.label` | Optional label (`MEKAYA_DOCS_LABEL`). Falls back to the translated "Documentation". |
+| `documentation.open_in_new_tab` | Open in a new tab (`MEKAYA_DOCS_NEW_TAB`). Default `true`. |
 
 Mekaya does not force its bundled SVG identity onto the application. Branding resolves in
 this order: the Filament panel's `brandLogo()`, `admin.brand`, `admin.brand_icon`, then the

@@ -25,4 +25,22 @@ return [
         'favicon' => null,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Sidebar documentation link
+    |--------------------------------------------------------------------------
+    |
+    | Optional footer link in the Mekaya sidebar (Shopper-style). Disabled by
+    | default — enable and set a URL via env/config, or override from
+    | MekayaPlugin::documentation(...). The link only renders when enabled
+    | and the URL is non-empty. Plugin fluent calls take precedence.
+    |
+    */
+    'documentation' => [
+        'enabled' => env('MEKAYA_DOCS_ENABLED', false),
+        'url' => env('MEKAYA_DOCS_URL'),
+        'label' => env('MEKAYA_DOCS_LABEL'),
+        'open_in_new_tab' => env('MEKAYA_DOCS_NEW_TAB', true),
+    ],
+
 ];

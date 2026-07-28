@@ -15,6 +15,7 @@ return [
         'open' => 'Open sidebar',
         'toggle' => 'Toggle sidebar',
         'close' => 'Close sidebar',
+        'documentation' => 'Documentation',
     ],
 
     'theme' => [

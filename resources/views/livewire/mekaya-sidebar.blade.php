@@ -92,8 +92,6 @@
                                     'navigation' => $navigation,
                                     'navigationIdPrefix' => 'desktop',
                                 ])
-
-                                {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_END) }}
                             </nav>
                         </div>
 
@@ -104,19 +102,7 @@
                     </div>
 
                     <!-- Footer -->
-                    @if (filament()->auth()->check() && ($hasDatabaseNotificationsInSidebar || $hasUserMenuInSidebar))
-                        <div class="mky-sidebar border-t border-gray-200 px-3 pt-3 pb-6 dark:border-white/20">
-                            @if ($hasDatabaseNotificationsInSidebar && ($dbNotificationsComponent = mekaya_database_notifications_component()))
-                                @livewire($dbNotificationsComponent, [
-                                    'lazy' => mekaya_database_notifications_is_lazy(),
-                                ])
-                            @endif
-
-                            @if ($hasUserMenuInSidebar)
-                                <x-filament-panels::user-menu />
-                            @endif
-                        </div>
-                    @endif
+                    @include('mekaya::livewire.partials.mekaya-sidebar-footer')
                 </div>
             </div>
         </div>
@@ -196,8 +182,6 @@
                                         'navigation' => $navigation,
                                         'navigationIdPrefix' => 'mobile',
                                     ])
-
-                                    {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_END) }}
                                 </nav>
                             </div>
 
@@ -208,19 +192,7 @@
                         </div>
 
                         <!-- Footer -->
-                        @if (filament()->auth()->check() && ($hasDatabaseNotificationsInSidebar || $hasUserMenuInSidebar))
-                            <div class="mky-sidebar border-t border-gray-200 px-3 pt-3 pb-6 dark:border-white/20">
-                                @if ($hasDatabaseNotificationsInSidebar && ($dbNotificationsComponent = mekaya_database_notifications_component()))
-                                    @livewire($dbNotificationsComponent, [
-                                        'lazy' => mekaya_database_notifications_is_lazy(),
-                                    ])
-                                @endif
-
-                                @if ($hasUserMenuInSidebar)
-                                    <x-filament-panels::user-menu />
-                                @endif
-                            </div>
-                        @endif
+                        @include('mekaya::livewire.partials.mekaya-sidebar-footer')
                     </div>
                 </div>
             </div>

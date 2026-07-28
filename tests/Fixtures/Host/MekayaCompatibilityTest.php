@@ -11,6 +11,7 @@ use Apriansyahrs\MekayaTheme\Auth\MekayaRequestPasswordReset;
 use Apriansyahrs\MekayaTheme\Auth\MekayaResetPassword;
 use Apriansyahrs\MekayaTheme\Livewire\MekayaSidebar;
 use Apriansyahrs\MekayaTheme\Mekaya;
+use Apriansyahrs\MekayaTheme\MekayaPlugin;
 use Composer\InstalledVersions;
 use Filament\Facades\Filament;
 use Filament\Livewire\Sidebar;
@@ -177,6 +178,57 @@ class MekayaCompatibilityTest extends TestCase
         sort($indonesian);
 
         $this->assertSame($english, $indonesian);
+    }
+
+    public function test_sidebar_documentation_stays_off_until_enabled_with_a_url(): void
+    {
+        config()->set('mekaya.documentation', [
+            'enabled' => false,
+            'url' => 'https://docs.example.com',
+            'label' => null,
+            'open_in_new_tab' => true,
+        ]);
+
+        $this->assertFalse(mekaya()->documentationEnabled());
+
+        config()->set('mekaya.documentation.enabled', true);
+        config()->set('mekaya.documentation.url', null);
+
+        $this->assertFalse(mekaya()->documentationEnabled());
+
+        config()->set('mekaya.documentation.url', 'https://docs.example.com');
+
+        $this->assertTrue(mekaya()->documentationEnabled());
+        $this->assertSame('https://docs.example.com', mekaya()->documentationUrl());
+        $this->assertSame('Documentation', mekaya()->documentationLabel());
+        $this->assertTrue(mekaya()->documentationOpensInNewTab());
+
+        $plugin = MekayaPlugin::get();
+
+        try {
+            $plugin->documentation('https://plugin.example.com/docs', label: 'Docs', newTab: false);
+
+            $this->assertTrue(mekaya()->documentationEnabled());
+            $this->assertSame('https://plugin.example.com/docs', mekaya()->documentationUrl());
+            $this->assertSame('Docs', mekaya()->documentationLabel());
+            $this->assertFalse(mekaya()->documentationOpensInNewTab());
+
+            $plugin->documentation(false);
+
+            $this->assertFalse(mekaya()->documentationEnabled());
+        } finally {
+            $reflection = new \ReflectionClass($plugin);
+
+            foreach ([
+                'documentationEnabled',
+                'documentationUrl',
+                'documentationLabel',
+                'documentationOpenInNewTab',
+            ] as $property) {
+                $reflectionProperty = $reflection->getProperty($property);
+                $reflectionProperty->setValue($plugin, null);
+            }
+        }
     }
 
     public function test_auth_routes_and_guest_redirect_render_the_mekaya_experience(): void

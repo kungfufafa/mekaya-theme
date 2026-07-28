@@ -6,11 +6,22 @@
 /* Plugin's own Blade views (sidebar, components, chrome overrides). */
 @source '../views/**/*.blade.php';
 
-/* Host app + host views. Paths are relative to this package's resources/css
-   directory — five levels up to the consuming project root. */
+/* Host app + host views.
+ |
+ | Tailwind resolves @source against this file's realpath. With Composer
+ | path repositories that realpath is the sibling package checkout
+ | (…/mekaya-theme/resources/css), NOT vendor/kungfufafa/mekaya-theme/…
+ | — so the classic five-level vendor climb misses the host app. Cover
+ | both layouts. */
 @source '../../../../../app/**/*.php';
 @source '../../../../../resources/views/**/*.blade.php';
+@source '../../../filament-helpdesk/app/**/*.php';
+@source '../../../filament-helpdesk/resources/views/**/*.blade.php';
 @source '../../../../../vendor/awcodes/overlook/resources/views/**/*.blade.php';
+@source '../../../../../vendor/kungfufafa/filament-ai-assistant/resources/views/**/*.blade.php';
+@source '../../../../../vendor/kungfufafa/filament-ai-assistant/resources/js/**/*.js';
+@source '../../../filament-ai-assistant/resources/views/**/*.blade.php';
+@source '../../../filament-ai-assistant/resources/js/**/*.js';
 
 @source inline("max-w-{md,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl}");
 

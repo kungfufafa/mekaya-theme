@@ -57,7 +57,7 @@
 
             {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::GLOBAL_SEARCH_AFTER) }}
         </div>
-        <div class="fi-topbar-end flex items-center gap-x-3">
+        <div class="fi-topbar-end flex shrink-0 items-center gap-x-3">
             <a
                 href="{{ url('/') }}"
                 target="_blank"
@@ -75,13 +75,16 @@
                         'lazy' => mekaya_database_notifications_is_lazy(),
                     ])
                 @endif
+            @endif
 
+            {{-- Keep TOPBAR_END inside the end cluster so hooks (e.g. Ask AI) cannot collapse into the padding gutter. --}}
+            {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_END) }}
+
+            @if (filament()->auth()->check())
                 @if (filament()->hasUserMenu() && (!enum_exists(\Filament\Enums\UserMenuPosition::class) || !method_exists(filament(), 'getUserMenuPosition') || filament()->getUserMenuPosition() === \Filament\Enums\UserMenuPosition::Topbar))
                     <x-filament-panels::user-menu />
                 @endif
             @endif
         </div>
-
-        {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::TOPBAR_END) }}
     </div>
 </div>

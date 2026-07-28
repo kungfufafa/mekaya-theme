@@ -70,4 +70,8 @@
             </ul>
         </div>
     @endforeach
+
+    {{-- Plugin hooks (e.g. AI chat history) must live inside .mky-sidebar so
+         nested Mekaya sidebar styles apply. --}}
+    {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIDEBAR_NAV_END) }}
 </div>

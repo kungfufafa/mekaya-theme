@@ -38,6 +38,14 @@ class MekayaPlugin implements Plugin
         'primary' => Color::Red,
     ];
 
+    protected ?bool $documentationEnabled = null;
+
+    protected ?string $documentationUrl = null;
+
+    protected ?string $documentationLabel = null;
+
+    protected ?bool $documentationOpenInNewTab = null;
+
     public static function make(): static
     {
         return app(static::class);
@@ -82,6 +90,55 @@ class MekayaPlugin implements Plugin
         $this->colors = $colors;
 
         return $this;
+    }
+
+    /**
+     * Configure the sidebar footer Documentation link.
+     *
+     * Pass a URL string to enable and set the destination, or `false` to force
+     * the link off. Optional `$label` / `$newTab` override config defaults.
+     * When unset, values fall back to `config('mekaya.documentation.*')`.
+     */
+    public function documentation(string|false $url, ?string $label = null, ?bool $newTab = null): static
+    {
+        if ($url === false) {
+            $this->documentationEnabled = false;
+
+            return $this;
+        }
+
+        $this->documentationEnabled = true;
+        $this->documentationUrl = $url;
+
+        if ($label !== null) {
+            $this->documentationLabel = $label;
+        }
+
+        if ($newTab !== null) {
+            $this->documentationOpenInNewTab = $newTab;
+        }
+
+        return $this;
+    }
+
+    public function getDocumentationEnabled(): ?bool
+    {
+        return $this->documentationEnabled;
+    }
+
+    public function getDocumentationUrl(): ?string
+    {
+        return $this->documentationUrl;
+    }
+
+    public function getDocumentationLabel(): ?string
+    {
+        return $this->documentationLabel;
+    }
+
+    public function getDocumentationOpenInNewTab(): ?bool
+    {
+        return $this->documentationOpenInNewTab;
     }
 
     public function register(Panel $panel): void
