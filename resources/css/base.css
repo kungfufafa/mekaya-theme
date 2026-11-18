@@ -54,6 +54,48 @@ html {
   @apply bg-gray-900;
 }
 
+/* Table horizontal scroller: a visible, roomier scrollbar so wide tables read as
+   scrollable. The track only paints when the table actually overflows. */
+.fi-ta-content-ctn::-webkit-scrollbar {
+  height: 0.625rem;
+}
+
+.fi-ta-content-ctn::-webkit-scrollbar-track {
+  background-color: var(--mky-surface-muted);
+  box-shadow: inset 0 1px 0 var(--mky-border);
+}
+
+.fi-ta-content-ctn::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-gray-400;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.fi-ta-content-ctn::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+.dark .fi-ta-content-ctn::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+}
+
+.dark .fi-ta-content-ctn::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Firefox. Kept out of WebKit/Blink on purpose: in Chrome 121+ setting
+   scrollbar-width/scrollbar-color disables the ::-webkit-scrollbar styling above. */
+@supports not selector(::-webkit-scrollbar) {
+  .fi-ta-content-ctn {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-400) transparent;
+  }
+
+  .dark .fi-ta-content-ctn {
+    scrollbar-color: var(--gray-600) transparent;
+  }
+}
+
 @variant dark (&:where(.dark, .dark *));
 
 @theme inline {

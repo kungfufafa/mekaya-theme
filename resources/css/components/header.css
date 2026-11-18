@@ -1,0 +1,33 @@
+/* Page header (.fi-header): core keeps .fi-header-actions-ctn shrink-0 with no wrap,
+   so many actions overflow the pane. Let the header wrap and the actions shrink. */
+.fi-header-heading {
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 40rem) {
+  .fi-header {
+    flex-wrap: wrap;
+    column-gap: 1.5rem;
+    row-gap: 1rem;
+  }
+
+  /* Core pushes the actions down by sm:mt-7 to line up with the heading under
+     the breadcrumbs; that margin already separates a wrapped actions row. */
+  .fi-header.fi-header-has-breadcrumbs {
+    row-gap: 0;
+  }
+
+  /* The heading column grows, so on a shared line the actions sit at the end
+     (core justify-between). Once they wrap onto their own line, they start at
+     the inline start, under the heading. */
+  .fi-header > :first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .fi-header > .fi-header-actions-ctn {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+}

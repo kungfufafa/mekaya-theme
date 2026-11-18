@@ -9,6 +9,27 @@
   min-height: 2.5rem;
 }
 
+/* The non-contained tab bar sits on --mky-surface-muted, which in light mode
+   equals Filament's gray-50 active/hover tint, so the active tab vanished.
+   Lift the active tab onto the content surface (segmented control) and give
+   hover/focus a tint that differs from the bar. */
+.fi-tabs:not(.fi-contained) .fi-tabs-item.fi-active {
+  background: var(--mky-surface);
+  box-shadow:
+    0 0 0 1px var(--mky-border),
+    0 1px 2px color-mix(in oklab, var(--gray-950) 8%, transparent);
+}
+
+.fi-tabs:not(.fi-contained) .fi-tabs-item:not(.fi-active):hover,
+.fi-tabs:not(.fi-contained) .fi-tabs-item:not(.fi-active):focus-visible {
+  background: color-mix(in oklab, var(--gray-950) 4%, transparent);
+}
+
+.dark .fi-tabs:not(.fi-contained) .fi-tabs-item:not(.fi-active):hover,
+.dark .fi-tabs:not(.fi-contained) .fi-tabs-item:not(.fi-active):focus-visible {
+  background: color-mix(in oklab, white 5%, transparent);
+}
+
 .fi-tabs-item:focus-visible {
   outline: 2px solid var(--primary-500);
   outline-offset: -2px;

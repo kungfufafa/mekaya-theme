@@ -11,6 +11,18 @@
       .fi-modal-footer-actions {
         @apply flex-row-reverse;
       }
+
+      /* Phone: stack the footer actions full-width, primary first, instead of
+         row-reverse + wrap leaving one button alone on a second row. Centered
+         footers keep Filament's own col-reverse (their DOM order is cancel-first).
+         Short (landscape) phones keep the row so the footer cannot eat the form. */
+      @media (max-width: 39.999rem) and (min-height: 32rem) {
+        .fi-modal-footer:not(.fi-align-center) .fi-modal-footer-actions {
+          flex-direction: column;
+          flex-wrap: nowrap;
+          align-items: stretch;
+        }
+      }
     }
   }
 }

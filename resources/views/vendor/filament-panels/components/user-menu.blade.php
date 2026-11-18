@@ -55,7 +55,7 @@
                     <x-filament-panels::avatar.user :user="$user" loading="lazy" />
 
                     <span
-                        class="absolute right-0 bottom-0 block size-2.5 rounded-full bg-success-400 ring-2 ring-white dark:ring-white/10"
+                        class="mky-user-menu-status absolute right-0 bottom-0 block size-2.5 rounded-full bg-success-400"
                         aria-hidden="true"
                     ></span>
                 </button>
@@ -107,15 +107,21 @@
             $item = $itemsBeforeThemeSwitcher['profile'];
             $itemColor = $item->getColor();
             $itemIcon = $item->getIcon();
+            // Filament's default profile item (no profile page) is a static header
+            // labelled with the user's name, which the account block above already
+            // shows. Only render it when an app gave it a different label.
+            $profileHeaderRepeatsAccount = trim(strip_tags((string) $item->getLabel())) === trim(strip_tags((string) $userName));
 
             unset($itemsBeforeThemeSwitcher['profile']);
         @endphp
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_BEFORE) }}
 
-        <x-filament::dropdown.header :color="$itemColor" :icon="$itemIcon">
-            {{ $item->getLabel() }}
-        </x-filament::dropdown.header>
+        @unless ($profileHeaderRepeatsAccount)
+            <x-filament::dropdown.header :color="$itemColor" :icon="$itemIcon">
+                {{ $item->getLabel() }}
+            </x-filament::dropdown.header>
+        @endunless
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::USER_MENU_PROFILE_AFTER) }}
     @endif

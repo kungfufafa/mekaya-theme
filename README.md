@@ -241,6 +241,31 @@ Enable a Shopper-style **Documentation** link in the sidebar footer with
 `->documentation('https://...')`. Pass `false` to force it off. Optional named
 arguments: `label:` and `newTab:`. Plugin values override config/env.
 
+### Sidebar footer links (render hook)
+
+The Mekaya sidebar replaces Filament's, but it still renders Filament's
+`PanelsRenderHook::SIDEBAR_FOOTER` hook in its footer. Add app links there (for
+example Horizon or a log viewer) instead of publishing and copying the sidebar view:
+
+```php
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+
+FilamentView::registerRenderHook(
+    PanelsRenderHook::SIDEBAR_FOOTER,
+    fn (): string => view('filament.sidebar-footer-links')->render(),
+);
+```
+
+The footer only appears when the hook, the documentation link, or the sidebar
+user menu / notifications have something to show.
+
+### Upgrading apps that published older Mekaya views
+
+Views published from older releases may call `mekaya_setting()`. It is kept as a
+deprecated helper so those views keep rendering, but published copies do not get
+fixes. Prefer deleting them and using the render hooks above.
+
 ### Config (`config/mekaya.php`)
 
 Publish with `php artisan vendor:publish --tag=mekaya-config`. Keys:

@@ -10,11 +10,18 @@
             $groupKey = filled($groupLabel) ? $groupLabel : 'default';
             $groupId = 'mekaya-' . $navigationIdPrefix . '-sidebar-group-' . $loop->index . '-' . md5($groupKey);
             $isGroupCollapsible = $group->isCollapsible();
+            // Like Filament's own sidebar, never hide the page the user is on:
+            // a group holding the active item opens even if it was stored or
+            // configured (->collapsed()) as collapsed.
+            $isGroupActive = filled($groupLabel) && $isGroupCollapsible && $group->isActive();
         @endphp
 
         <div
             class="mky-sidebar-group"
             x-data="{ label: @js($groupKey) }"
+            @if ($isGroupActive)
+                x-init="$store.sidebar.expandGroup(label)"
+            @endif
             data-group-label="{{ $groupKey }}"
         >
             @if (filled($groupLabel))
@@ -58,7 +65,9 @@
                 class="mky-sidebar-group-items"
                 @if (filled($groupLabel) && $isGroupCollapsible)
                     x-cloak
-                    x-show="! $store.sidebar.groupIsCollapsed(label)"
+                    {{-- In icon-only mode the group header is hidden, so a collapsed
+                         group could never be reopened: always show its icons. --}}
+                    x-show="$store.sidebar.isCollapsed || ! $store.sidebar.groupIsCollapsed(label)"
                     x-collapse.duration.200ms
                 @endif
             >

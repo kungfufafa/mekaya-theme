@@ -51,6 +51,9 @@ export default (config = {}) => {
     isCollapsed,
     collapsedGroups,
     collapsible: config.collapsible ?? false,
+    // Reactive viewport flag (updated by applyViewportState) so bindings such as
+    // the mobile drawer's focus trap re-evaluate when crossing the breakpoint.
+    isMobileViewport: false,
     currentPath: window.location.pathname,
     scrollTop: 0,
     initialized: false,
@@ -76,6 +79,38 @@ export default (config = {}) => {
       this.applyViewportState()
       this.setUpResizeObserver()
       this.setupNavigationListener()
+
+      // Mirror Filament's scroll-sidebar.js (its .fi-main-sidebar selectors do
+      // not exist in this appshell): once Alpine has rendered the groups, bring
+      // the active item into view if it is outside the scroll area.
+      document.addEventListener(
+        'alpine:initialized',
+        () => window.requestAnimationFrame(() => this.revealActiveItem()),
+        { once: true },
+      )
+    },
+
+    // Scroll the sidebar (never the page) so the active item is visible.
+    // Does nothing when it already is, so a restored scroll position is kept.
+    revealActiveItem(selector = '#mekaya-desktop-sidebar .mky-si-scroll') {
+      const scroller =
+        typeof selector === 'string' ? document.querySelector(selector) : selector
+
+      if (!scroller) return
+
+      const active =
+        scroller.querySelector('a.mky-active[aria-current="page"]') ??
+        scroller.querySelector('a.mky-active')
+
+      if (!active || active.offsetParent === null) return
+
+      const scrollerRect = scroller.getBoundingClientRect()
+      const activeRect = active.getBoundingClientRect()
+
+      if (activeRect.top >= scrollerRect.top && activeRect.bottom <= scrollerRect.bottom) return
+
+      scroller.scrollTop +=
+        activeRect.top - scrollerRect.top - (scrollerRect.height - activeRect.height) / 2
     },
 
     loadConfigFromDOM() {
@@ -146,6 +181,8 @@ export default (config = {}) => {
     },
 
     applyViewportState() {
+      this.isMobileViewport = !this.isDesktop()
+
       if (this.isDesktop()) {
         this.isCollapsed = this.collapsible ? !this.isOpenDesktop : false
         this.isOpen = !this.isCollapsed
@@ -166,6 +203,10 @@ export default (config = {}) => {
 
       if (this.isDesktop()) {
         this.isOpen = this.isOpenDesktop
+
+        // Groups re-expand/collapse with a 200ms x-collapse; reveal the active
+        // item once the rail or full sidebar has settled.
+        window.Alpine?.nextTick(() => setTimeout(() => this.revealActiveItem(), 220))
       }
 
       this.syncCollapsedClass()
@@ -187,6 +228,10 @@ export default (config = {}) => {
 
       this.isOpen = true
       this.persistOpenState()
+
+      window.Alpine?.nextTick(() =>
+        this.revealActiveItem('#mekaya-mobile-sidebar .mky-si-scroll'),
+      )
     },
 
     close() {
@@ -278,6 +323,10 @@ export default (config = {}) => {
         const wasDesktop = previousWidth >= this.breakpoint
         const isDesktop = currentWidth >= this.breakpoint
 
+        // Must update synchronously, before isOpen changes below, so the drawer's
+        // focus trap never activates on the hidden drawer during the switch.
+        this.isMobileViewport = !isDesktop
+
         if (wasDesktop && !isDesktop) {
           this.isOpenDesktop = !this.isCollapsed
           this.isOpen = false
@@ -337,6 +386,9 @@ export default (config = {}) => {
           if (navigation && this.scrollTop) {
             navigation.scrollTop = this.scrollTop
           }
+
+          // Keep the restored position when it already shows the active item.
+          this.revealActiveItem(navigation)
         })
       })
     },

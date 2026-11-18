@@ -32,6 +32,39 @@
     @apply rounded-lg ring-1 ring-gray-200 dark:ring-white/10;
   }
 
+  /* Empty table: join the column header strip and the empty state into one card.
+     .fi-ta-main uses gap-y-2, so pull the empty state up by the gap + 1px so both
+     1px rings overlap into a single divider. */
+  .fi-ta-content-ctn:has(+ .fi-ta-empty-state),
+  .fi-ta-content-ctn:has(+ .fi-ta-empty-state) .fi-ta-table {
+    @apply rounded-b-none;
+  }
+
+  .fi-ta-content-ctn + .fi-ta-empty-state {
+    @apply rounded-t-none;
+    margin-top: calc(-0.5rem - 1px);
+  }
+
+  /* Heading + toolbar share one row (wraps on narrow screens). Without the stock
+     card frame/dividers a toolbar on its own row reads as a stray floating icon. */
+  .fi-ta-header-ctn:has(> .fi-ta-header):has(> .fi-ta-header-toolbar) {
+    @apply flex flex-wrap items-center gap-x-4;
+
+    & > * {
+      @apply min-w-0 basis-full;
+    }
+
+    & > .fi-ta-header {
+      @apply border-b-0;
+      flex: 1 1 16rem;
+    }
+
+    & > .fi-ta-header-toolbar {
+      @apply ms-auto;
+      flex: 0 1 auto;
+    }
+  }
+
   .fi-ta-empty-state:not(.fi-ta-ctn-with-content-layout .fi-ta-empty-state) {
     @apply border-t-0;
   }
@@ -77,6 +110,60 @@
   }
 }
 
-.fi-pagination {
+/* Filament core styles `.fi-ta-ctn .fi-pagination` (border-t + px-3 sm:px-6), which
+   outranks a bare `.fi-pagination` selector, so the frameless table kept a stray
+   divider above its pagination. Match core's specificity; source order wins. */
+.fi-pagination,
+.fi-ta-ctn .fi-pagination {
   @apply border-0 px-1;
+}
+
+/* Column manager can list dozens of columns; keep it inside the viewport.
+   An app-set ->columnManagerMaxHeight() is an inline style and still wins. */
+.fi-ta-col-manager-dropdown > .fi-dropdown-panel {
+  max-height: min(70dvh, 36rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Keep the column manager's header (reset link) and apply button in view while
+   the list scrolls. The 1.5rem padding lives on .fi-ta-col-manager, so the
+   sticky bars bleed to the panel edges with negative margins. */
+.fi-ta-col-manager-dropdown .fi-ta-col-manager {
+  --mky-col-manager-bg: var(--color-white, #fff);
+}
+
+.dark .fi-ta-col-manager-dropdown .fi-ta-col-manager {
+  --mky-col-manager-bg: var(--gray-900);
+}
+
+.fi-ta-col-manager-dropdown .fi-ta-col-manager-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: -1.5rem -1.5rem 0;
+  padding: 1.5rem 1.5rem 0.5rem;
+  background-color: var(--mky-col-manager-bg);
+}
+
+.fi-ta-col-manager-dropdown .fi-ta-col-manager-actions-ctn {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  margin: 0 -1.5rem -1.5rem;
+  padding: 0.75rem 1.5rem 1.5rem;
+  background-color: var(--mky-col-manager-bg);
+  box-shadow: 0 -1px 0 var(--mky-border);
+}
+
+/* Phone: the toolbar dropdowns (bottom-end + shift with 0 padding) are wider than
+   the space left of their trigger, so floating-ui pins them to x=0. Span them
+   across the table container instead (.fi-ta-ctn is their positioned ancestor),
+   which keeps the page gutter on both sides. */
+@media (max-width: 39.999rem) {
+  .fi-ta-ctn :is(.fi-ta-filters-dropdown, .fi-ta-col-manager-dropdown) > .fi-dropdown-panel {
+    inset-inline: 0 !important;
+    width: auto;
+    max-width: none !important;
+  }
 }

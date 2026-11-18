@@ -75,3 +75,111 @@
     box-shadow: inset 0 0 0 1px var(--mky-border);
   }
 }
+
+/* Sections nested on an existing surface (a contained section's content, a contained
+   tab panel, or a repeater item) render as ONE outlined surface instead of repeating
+   the mat + inset-surface recipe (card-in-mat-in-card with stacked padding). */
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+  padding: 0;
+  border-radius: var(--mky-radius-surface);
+  background: var(--mky-surface);
+  box-shadow: 0 0 0 1px var(--mky-border);
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside).fi-secondary {
+  background: var(--mky-surface-subtle);
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-header {
+  padding: 0.75rem 1rem;
+  border-radius: inherit;
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-content-ctn {
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: none;
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside).fi-section-has-header:not(.fi-collapsed) > .fi-section-content-ctn {
+  border-top: 1px solid var(--mky-border);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside):not(.fi-divided) > .fi-section-content-ctn > .fi-section-content,
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside).fi-divided > .fi-section-content-ctn > .fi-section-content > * {
+  padding: 1rem;
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-content-ctn > .fi-section-footer {
+  padding: 0.75rem 1rem;
+}
+
+/* Lazy placeholders on a surface: keep them readable as a muted, pulsing block. */
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section.fi-loading-section:not(.fi-section-not-contained):not(.fi-aside) {
+  background: var(--mky-surface-muted);
+}
+
+/* Phones: the mat already insets every contained section, so content padding drops
+   from 1.5rem to 1rem to give fields, tables and charts room. */
+@media (max-width: 39.99rem) {
+  .fi-section:not(.fi-section-not-contained):not(.fi-compact):not(.fi-divided) > .fi-section-content-ctn > .fi-section-content,
+  .fi-section:not(.fi-section-not-contained):not(.fi-compact).fi-divided > .fi-section-content-ctn > .fi-section-content > * {
+    padding: 1rem;
+  }
+
+  .fi-section:not(.fi-section-not-contained):not(.fi-compact) > .fi-section-content-ctn > .fi-section-footer {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Section header with after-header content (chart filters, header actions/links):
+   core is a non-wrapping flex row, so narrow cards squeeze the title into a
+   one-word column and push the after-content past the card edge. Wrap instead. */
+.fi-section > .fi-section-header:has(> .fi-section-header-after-ctn) {
+  flex-wrap: wrap;
+  row-gap: 1rem;
+}
+
+.fi-section > .fi-section-header:has(> .fi-section-header-after-ctn) > .fi-section-header-text-ctn {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.fi-section > .fi-section-header > .fi-section-header-after-ctn {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* A wrapped header must not carry the collapse chevron along with the after-header
+   content: keep it in the top-right corner like every other collapsible section. */
+.fi-section.fi-collapsible > .fi-section-header:has(> .fi-section-header-after-ctn) {
+  position: relative;
+  padding-inline-end: 3rem;
+}
+
+.fi-section.fi-collapsible > .fi-section-header:has(> .fi-section-header-after-ctn) > .fi-section-collapse-btn {
+  position: absolute;
+  top: 0.75rem;
+  inset-inline-end: 0.5rem;
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section.fi-collapsible:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-header:has(> .fi-section-header-after-ctn) {
+  padding-inline-end: 3.5rem;
+}
+
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-section.fi-collapsible:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-header:has(> .fi-section-header-after-ctn) > .fi-section-collapse-btn {
+  inset-inline-end: 1rem;
+}
