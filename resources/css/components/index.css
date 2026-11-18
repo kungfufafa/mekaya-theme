@@ -5,6 +5,7 @@
 @import './sidebar.css' layer(components);
 @import './shiki.css' layer(components);
 @import './section.css' layer(components);
+@import './header.css' layer(components);
 @import './widgets.css' layer(components);
 @import './table.css' layer(components);
 @import './feedback.css' layer(components);

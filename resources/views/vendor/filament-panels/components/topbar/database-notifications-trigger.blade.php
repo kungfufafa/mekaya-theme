@@ -9,6 +9,7 @@
 
     // `filled(0)` is true in Laravel, so compare against > 0 like Filament core.
     $hasUnreadNotifications = ((int) ($unreadNotificationsCount ?? 0)) > 0;
+    $unreadNotificationsBadge = ((int) ($unreadNotificationsCount ?? 0)) > 99 ? '99+' : $unreadNotificationsCount;
 
     if ($hasUnreadNotifications) {
         $notificationsLabel .= ': ' . $unreadNotificationsCount;
@@ -44,10 +45,10 @@
 
     @if ($hasUnreadNotifications)
         <span
-            class="absolute -top-1 -right-1 inline-flex min-w-4 items-center justify-center rounded-full bg-primary-500 px-1 text-[0.625rem] font-semibold leading-none text-white"
+            class="mky-topbar-badge absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-500 px-1 text-[0.625rem] font-semibold leading-none text-white tabular-nums"
             aria-hidden="true"
         >
-            {{ $unreadNotificationsCount }}
+            {{ $unreadNotificationsBadge }}
         </span>
     @endif
 </button>

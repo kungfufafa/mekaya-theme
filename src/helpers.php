@@ -12,6 +12,22 @@ if (! function_exists('mekaya')) {
     }
 }
 
+if (! function_exists('mekaya_setting')) {
+    /**
+     * @deprecated Kept so host apps that published older Mekaya views keep
+     *             rendering after an upgrade. Reads the legacy `mekaya.settings`
+     *             config and falls back to the application name.
+     */
+    function mekaya_setting(?string $key = null, mixed $default = null): mixed
+    {
+        $settings = (array) config('mekaya.settings', []) + [
+            'name' => config('app.name'),
+        ];
+
+        return $key === null ? $settings : data_get($settings, $key, $default);
+    }
+}
+
 if (! function_exists('mekaya_panel_assets')) {
     /**
      * Build a URL for an asset published under the Mekaya vendor directory.

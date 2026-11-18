@@ -14,6 +14,18 @@ class MekayaChangePassword extends EditProfile
 {
     protected static bool $shouldRegisterNavigation = false;
 
+    /**
+     * The plugin always registers this page, but EditProfile derives its layout
+     * from the panel's profile config. When the host overrides or disables
+     * ->profile() (default isSimple = true), the page dropped to the bare simple
+     * layout: no brand, no auth card and the topbar menu floating over an empty
+     * page. Follow the profile page when one is configured, else stay in the shell.
+     */
+    public static function isSimple(): bool
+    {
+        return Filament::hasProfile() ? Filament::isProfilePageSimple() : false;
+    }
+
     public static function getLabel(): string
     {
         return __('mekaya::ui.password.title');

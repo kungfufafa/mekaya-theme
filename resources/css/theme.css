@@ -34,6 +34,12 @@
     .fi-main.mky-main {
         height: auto;
         min-height: 0;
+        /* The scroll pane is overflow-x:hidden + overflow-y:auto; hidden is still
+           programmatically scrollable, so focusing anything wider than the pane
+           shifts the whole pane (topbar included) sideways with no scrollbar to
+           return. Clip (not hidden): no scroll container, so sticky children and
+           vertical overflow keep working. */
+        overflow-x: clip;
     }
 
     /* Global search results dropdown: Filament scopes its wide desktop layout to
@@ -73,6 +79,24 @@
 
     .mky-user-menu-account .fi-avatar {
         @apply size-8 rounded-full;
+    }
+
+    /* Avatar providers return arbitrary colours (ui-avatars: a gray-950 disc).
+       A hairline in the theme border token keeps the avatar's edge visible on
+       the gray-50 / gray-950 header and on the dropdown panel. */
+    .mky-user-menu .fi-avatar,
+    .mky-user-menu-account .fi-avatar {
+        box-shadow: 0 0 0 1px var(--mky-border-strong);
+    }
+
+    /* Presence dot: cut it out of the header surface instead of a white ring. */
+    .mky-user-menu-status {
+        box-shadow: 0 0 0 2px var(--mky-surface-muted);
+    }
+
+    /* Cut the unread notifications badge out of the topbar surface. */
+    .mky-topbar-badge {
+        box-shadow: 0 0 0 2px var(--mky-surface-muted);
     }
 
     .mky-user-menu .fi-dropdown-list {

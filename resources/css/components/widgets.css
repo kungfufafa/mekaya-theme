@@ -48,8 +48,69 @@ a.fi-wi-stats-overview-stat:focus-visible {
   outline-offset: 4px;
 }
 
-.fi-wi-chart > .fi-section .fi-wi-chart-canvas-ctn {
+/* Narrow stat cards (5-6 columns at lg with the sidebar open) must wrap, not
+   clip. The stat is overflow:hidden for its frame, and Filament's auto grid
+   track (min-content of the longest word + description icon) used to spill
+   past the inner surface. */
+.fi-wi-stats-overview-stat {
+  container-type: inline-size;
+}
+
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-content {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-label,
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-value,
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-description > span {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+@container (max-width: 10rem) {
+  .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-content {
+    padding: 1rem;
+  }
+
+  .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-description {
+    flex-wrap: wrap;
+  }
+}
+
+/* Stat cards on a surface drop their own mat (same reason as nested sections). */
+:is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+  .fi-wi-stats-overview-stat {
+  padding: 0;
+  border-radius: var(--mky-radius-surface);
+  background: var(--mky-surface);
+  box-shadow: 0 0 0 1px var(--mky-border);
+
+  & .fi-wi-stats-overview-stat-content {
+    padding: 1.25rem;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  & .fi-wi-stats-overview-stat-chart {
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+/* Only aspect-ratio containers can grow into a min-height (the canvas fills
+   them). With $maxHeight Filament switches the chart to maintainAspectRatio,
+   so the canvas keeps width/2 height and a min-height just adds a blank band. */
+.fi-wi-chart > .fi-section .fi-wi-chart-canvas-ctn:not(.fi-wi-chart-canvas-ctn-no-aspect-ratio) {
   @apply min-h-56;
+}
+
+/* Core pulls the chart filter by -0.5rem on both sides (sm:-my-2) to sit on the
+   heading line; keep the pull-up but not the pull-down so a wrapped filter does
+   not touch the chart surface, and never let it exceed the card. */
+.fi-wi-chart .fi-section-header-after-ctn > .fi-wi-chart-filter.fi-input-wrp {
+  max-width: 100%;
+  margin-block-end: 0;
 }
 
 .fi-wi-table > .fi-ta {
@@ -63,5 +124,14 @@ a.fi-wi-stats-overview-stat:focus-visible {
 
   a.fi-wi-stats-overview-stat:hover {
     transform: none;
+  }
+}
+
+/* Narrow nested stats: the nested-surface padding above outranks the container
+   query, so repeat the narrow padding at matching specificity. */
+@container (max-width: 10rem) {
+  :is(.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn, .fi-sc-tabs.fi-contained > .fi-sc-tabs-tab, .fi-fo-repeater-item-content)
+    .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-content {
+    padding: 1rem;
   }
 }

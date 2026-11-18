@@ -128,7 +128,7 @@
             role="dialog"
             aria-modal="true"
             aria-label="{{ strip_tags((string) mekaya()->brandName()) }}"
-            x-trap.noscroll="$store.sidebar.isOpen"
+            x-trap.noscroll="$store.sidebar.isOpen && $store.sidebar.isMobileViewport"
         >
             <div
                 x-cloak
@@ -147,7 +147,7 @@
                     <!-- Header / Branding -->
                     <div class="px-3 py-4">
                         <div
-                            class="relative flex items-start gap-3 rounded-lg bg-white py-2 shadow-xs ring-1 ring-gray-200 dark:bg-white/5 dark:ring-white/20"
+                            class="relative flex items-center gap-3 rounded-lg bg-white px-2 py-2 shadow-xs ring-1 ring-gray-200 dark:bg-white/5 dark:ring-white/20"
                         >
                             <a
                                 href="{{ filament()->getUrl() }}"
@@ -173,7 +173,7 @@
                         <div class="relative min-h-0 flex-1">
                             <!-- Top fade gradient -->
                             <div
-                                class="pointer-events-none absolute top-0 right-0.5 left-0 z-10 h-6 bg-linear-to-b from-gray-50 to-transparent dark:from-gray-950"
+                                class="pointer-events-none absolute top-0 right-0.5 left-0 z-10 h-6 bg-linear-to-b from-white to-transparent dark:from-gray-900"
                             ></div>
 
                             <div class="mky-si-scroll h-full overflow-y-auto">
@@ -187,7 +187,7 @@
 
                             <!-- Bottom fade gradient -->
                             <div
-                                class="pointer-events-none absolute right-0.5 bottom-0 left-0 z-10 h-6 bg-linear-to-t from-gray-50 to-transparent dark:from-gray-950"
+                                class="pointer-events-none absolute right-0.5 bottom-0 left-0 z-10 h-6 bg-linear-to-t from-white to-transparent dark:from-gray-900"
                             ></div>
                         </div>
 
